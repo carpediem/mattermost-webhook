@@ -1,38 +1,39 @@
 <?php
 
-namespace ThibaudDauce\Mattermost;
+namespace Carpediem\Mattermost;
 
-use Closure;
+use JsonSerializable;
+use Traversable;
 
-class Message {
-
+final class Message implements JsonSerializable
+{
     /**
      * The text of the message.
      *
      * @var string
      */
-    public $text;
+    private $text = '';
 
     /**
      * The printed username of the message.
      *
      * @var string
      */
-    public $username;
+    private $username = '';
 
     /**
      * The channel of the message.
      *
      * @var string
      */
-    public $channel;
+    private $channel = '';
 
     /**
      * The icon of the message.
      *
      * @var string
      */
-    public $iconUrl;
+    private $icon_url = '';
 
     /**
      * The attachments of the message.
@@ -42,58 +43,67 @@ class Message {
     public $attachments = [];
 
     /**
-     * @param  string  $text
-     * @return $this
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return array_filter($this->toArray(), __NAMESPACE__.'\\filter_array_value');
+    }
+
+    /**
+     * Returns the array representation of the object
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * @param string $text
+     *
+     * @return self
      */
     public function text($text)
     {
-        $this->text = $text;
+        $this->text = filter_string($text, 'text');
 
         return $this;
     }
 
     /**
-     * @param  string  $username
-     * @return $this
+     * @param string $username
+     *
+     * @return self
      */
     public function username($username)
     {
-        $this->username = $username;
+        $this->username = filter_string($username, 'username');
 
         return $this;
     }
 
     /**
-     * @param  string  $channel
-     * @return $this
+     * @param string $channel
+     *
+     * @return self
      */
     public function channel($channel)
     {
-        $this->channel = $channel;
+        $this->channel = filter_string($channel, 'channel');
 
         return $this;
     }
 
     /**
-     * @param  string  $iconUrl
-     * @return $this
-     */
-    public function iconUrl($iconUrl)
-    {
-        $this->iconUrl = $iconUrl;
-
-        return $this;
-    }
-
-    /**
-     * Override all attachments for the message.
+     * @param string $icon_url
      *
-     * @param  Attachment[]  $attachments
-     * @return $this
+     * @return self
      */
-    public function attachments($attachments = [])
+    public function iconUrl($icon_url)
     {
-        $this->attachments = $attachments;
+        $this->icon_url = filter_uri($icon_url, 'icon_url');
 
         return $this;
     }
@@ -101,14 +111,42 @@ class Message {
     /**
      * Add an attachment for the message.
      *
-     * @param  \Closure  $callback
-     * @return $this
+     * @param Attachment|callable $attachment
+     *
+     * @return self
      */
-    public function attachment(Closure $callback)
+    public function attachment($attachment)
     {
-        $this->attachments[] = $attachment = new Attachment;
+        if (is_callable($attachment)) {
+            $item = new Attachment();
+            $attachment($item);
 
-        $callback($attachment);
+            $this->attachments[] = $item;
+            return $this;
+        }
+
+        if ($attachment instanceof Attachment) {
+            $this->attachments[] = $attachment;
+
+            return $this;
+        }
+
+        throw new Exception(sprintf('The submitted argument must be a callable or a %s class', Attachment::class));
+    }
+
+    /**
+     * Override all attachements with a iterable structure
+     *
+     * @param array|Traversable $attachments
+     *
+     * @return self
+     */
+    public function attachments($attachments)
+    {
+        $this->attachments = [];
+        foreach ($attachments as $attachment) {
+            $this->attachment($attachment);
+        }
 
         return $this;
     }
