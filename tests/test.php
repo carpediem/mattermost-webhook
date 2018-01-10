@@ -1,21 +1,22 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
-use GuzzleHttp\Client;
-use ThibaudDauce\Mattermost\Mattermost;
-use ThibaudDauce\Mattermost\Message;
-use ThibaudDauce\Mattermost\Attachment;
+use Carpediem\Mattermost\Attachment;
+use Carpediem\Mattermost\Client;
+use Carpediem\Mattermost\Message;
+use GuzzleHttp\Client as GuzzleClient;
 
-$mattermost = new Mattermost(new Client);
+$mattermost = new Client(new GuzzleClient());
 
-$message = (new Message)
+$message = (new Message())
     ->text('This is a *test*.')
-    ->channel('tests')
+    ->channel('alerts')
     ->username('A Tester')
     ->iconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
-    ->attachment(function(Attachment $attachment) {
-        $attachment->fallback('This is the fallback test for the attachment.')
+    ->attachment(function (Attachment $attachment) {
+        $attachment
+            ->fallback('This is the fallback test for the attachment.')
             ->success()
             ->pretext('This is optional pretext that shows above the attachment.')
             ->text('This is the text. **Finaly!**')
@@ -27,7 +28,9 @@ $message = (new Message)
             ->field('Column one', 'Testing.', true)
             ->field('Column two', 'Testing.', true)
             ->field('Column one again', 'Testing.', true)
-            ->imageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png');
-    });
+            ->imageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png')
+        ;
+    })
+;
 
-$mattermost->send($message, 'https://your_mattermost_webhook_url');
+$mattermost->send('https://talk.2town.net/hooks/en8t69azpjbfiq8ysjdf893b7r', $message);
