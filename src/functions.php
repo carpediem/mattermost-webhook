@@ -1,40 +1,31 @@
 <?php
+/**
+* This file is part of the Carpediem.Errors library
+*
+* @license http://opensource.org/licenses/MIT
+* @link https://github.com/carpediem/mattermost-php/
+* @version 0.1.0
+* @package carpediem.mattermost-php
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
+declare(strict_types=1);
 
 namespace Carpediem\Mattermost;
 
 /**
- * Filter string
- *
- * @param mixed  $var
- * @param string $name
- *
- * @throws Exception If the value can not be stringify
- *
- * @return string
- */
-function filter_string($var, $name = '')
-{
-    if (is_string($var) || (is_object($var) && method_exists($var, '__toString'))) {
-        return trim((string) $var);
-    }
-
-    throw new Exception(sprintf('Expected %s to a a string %s received', $name, gettype($var)));
-}
-
-/**
  * Filter Uri
  *
- * @param mixed  $var
- * @param string $name
- * @param mixed  $raw_url
+ * @param string $raw_url
  *
  * @throws Exception If the value is not a valid URL
  *
  * @return string
  */
-function filter_uri($raw_url, $name = '')
+function filter_uri(string $raw_url): string
 {
-    $url = filter_var(filter_string($raw_url, 'name'), FILTER_VALIDATE_URL);
+    $url = filter_var($raw_url, FILTER_VALIDATE_URL);
     if (!$url) {
         throw new Exception(sprintf('Malformed URL %s', $raw_url));
     }
@@ -58,7 +49,7 @@ function filter_uri($raw_url, $name = '')
  *
  * @return bool
  */
-function filter_array_value($prop)
+function filter_array_value($prop): bool
 {
     return (is_string($prop) && '' !== $prop)
         || (is_array($prop) && !empty($prop));

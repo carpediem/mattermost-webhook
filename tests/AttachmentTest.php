@@ -5,6 +5,7 @@ namespace Carpediem\Mattermost\Test;
 use Carpediem\Mattermost\Attachment;
 use Carpediem\Mattermost\Exception;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * @coversDefaultClass Carpediem\Mattermost\Attachment
@@ -43,7 +44,7 @@ final class AttachmentTest extends TestCase
 
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(TypeError::class);
         (new Attachment())->error()->fallback(date_create());
     }
 

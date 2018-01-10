@@ -1,4 +1,16 @@
 <?php
+/**
+* This file is part of the Carpediem.Errors library
+*
+* @license http://opensource.org/licenses/MIT
+* @link https://github.com/carpediem/mattermost-php/
+* @version 0.1.0
+* @package carpediem.mattermost-php
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
+declare(strict_types=1);
 
 namespace Carpediem\Mattermost;
 
@@ -127,7 +139,7 @@ final class Attachment implements JsonSerializable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return get_object_vars($this);
     }
@@ -137,9 +149,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function fallback($fallback)
+    public function fallback(string $fallback): self
     {
-        $this->fallback = filter_string($fallback, 'fallback');
+        $this->fallback = trim($fallback);
 
         return $this;
     }
@@ -149,9 +161,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function color($color)
+    public function color(string $color): self
     {
-        $this->color = filter_string($color, 'color');
+        $this->color = trim($color);
 
         return $this;
     }
@@ -161,7 +173,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function success()
+    public function success(): self
     {
         return $this->color('#22BC66');
     }
@@ -171,7 +183,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function error()
+    public function error(): self
     {
         return $this->color('#DC4D2F');
     }
@@ -181,7 +193,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function info()
+    public function info(): self
     {
         return $this->color('#3869D4');
     }
@@ -191,9 +203,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function pretext($pretext)
+    public function pretext(string $pretext): self
     {
-        $this->pretext = filter_string($pretext, 'pretext');
+        $this->pretext = trim($pretext);
 
         return $this;
     }
@@ -203,9 +215,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function text($text)
+    public function text(string $text): self
     {
-        $this->text = $text;
+        $this->text = trim($text);
 
         return $this;
     }
@@ -215,9 +227,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function authorName($author_name)
+    public function authorName(string $author_name): self
     {
-        $this->author_name = filter_string($author_name, 'author_name');
+        $this->author_name = trim($author_name);
 
         return $this;
     }
@@ -227,7 +239,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function authorLink($author_link)
+    public function authorLink(string $author_link): self
     {
         $this->author_link = filter_uri($author_link, 'author_link');
 
@@ -239,9 +251,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function authorIcon($author_icon)
+    public function authorIcon(string $author_icon): self
     {
-        $this->author_icon = filter_string($author_icon, 'author_icon');
+        $this->author_icon = filter_uri(trim($author_icon), 'author_icon');
 
         return $this;
     }
@@ -252,16 +264,16 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function title($title, $title_link = null)
+    public function title(string $title, string $title_link = null): self
     {
-        $this->title = filter_string($title, 'title');
+        $this->title = trim($title);
         if ('' === $this->title || null === $title_link) {
             $this->title_link = null;
 
             return $this;
         }
 
-        $this->title_link = filter_uri($title_link, 'title_link');
+        $this->title_link = filter_uri(trim($title_link), 'title_link');
 
         return $this;
     }
@@ -273,7 +285,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function fields(array $fields = [])
+    public function fields(array $fields = []): self
     {
         $this->fields = [];
         foreach ($fields as $field) {
@@ -293,13 +305,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function field($title, $value, $short = true)
+    public function field(string $title, string $value, bool $short = true): self
     {
-        $this->fields[] = [
-            'title' => filter_string($title, 'field title'),
-            'value' => filter_string($value, 'field value'),
-            'short' => (bool) $short,
-        ];
+        $this->fields[] = ['title' => trim($title), 'value' => trim($value), 'short' => $short];
 
         return $this;
     }
@@ -309,9 +317,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function imageUrl($image_url)
+    public function imageUrl(string $image_url): self
     {
-        $this->image_url = filter_uri($image_url, 'image_url');
+        $this->image_url = filter_uri(trim($image_url), 'image_url');
 
         return $this;
     }
@@ -321,9 +329,9 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function thumbUrl($thumb_url)
+    public function thumbUrl(string $thumb_url): self
     {
-        $this->thumb_url = filter_uri($thumb_url, 'thumb_url');
+        $this->thumb_url = filter_uri(trim($thumb_url), 'thumb_url');
 
         return $this;
     }
