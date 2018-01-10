@@ -12,7 +12,7 @@ You need **PHP >= 5.6.0** but the latest stable version of PHP is recommended.
 ## Installation
 
 ```bash
-$ composer require thibaud-dauce/mattermost-php
+$ composer require carpediem/mattermost-php
 ```
 
 ## Basic usage
