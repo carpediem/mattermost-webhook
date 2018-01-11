@@ -24,16 +24,16 @@ use Psr\Http\Message\UriInterface;
  *
  * @throws Exception If the value is not a valid URL
  *
- * @return UriInterface
+ * @return string
  */
 function filter_uri($raw_url): string
 {
     $url = Psr7\uri_for($raw_url);
-    if (!in_array($url->getScheme(), ['http', 'https'], true)) {
-        throw new Exception(sprintf('the URL must contains a HTTP or HTTPS scheme %s', $raw_url));
+    if (in_array($url->getScheme(), ['http', 'https'], true)) {
+        return (string) $url;
     }
 
-    return (string) $url;
+    throw new Exception(sprintf('the URL must contains a HTTP or HTTPS scheme %s', $raw_url));
 }
 
 /**
@@ -49,13 +49,6 @@ function filter_uri($raw_url): string
  */
 function filter_array_value($prop): bool
 {
-    if (is_string($prop) && '' !== $prop) {
-        return true;
-    }
-
-    if ($prop instanceof UriInterface) {
-        return true;
-    }
-
-    return is_array($prop) && !empty($prop);
+    return (is_string($prop) && '' !== $prop)
+        || (is_array($prop) && !empty($prop));
 }
