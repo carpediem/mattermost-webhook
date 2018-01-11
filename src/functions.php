@@ -12,30 +12,28 @@
 */
 declare(strict_types=1);
 
-namespace Carpediem\Mattermost;
+namespace Carpediem\Mattermost\Webhook;
+
+use GuzzleHttp\Psr7;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Filter Uri
  *
- * @param string $raw_url
+ * @param string|UriInterface $raw_url
  *
  * @throws Exception If the value is not a valid URL
  *
- * @return string
+ * @return UriInterface
  */
-function filter_uri(string $raw_url): string
+function filter_uri($raw_url): string
 {
-    $url = filter_var($raw_url, FILTER_VALIDATE_URL);
-    if (!$url) {
-        throw new Exception(sprintf('Malformed URL %s', $raw_url));
-    }
-
-    $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
-    if (!in_array($scheme, ['http', 'https'], true)) {
+    $url = Psr7\uri_for($raw_url);
+    if (!in_array($url->getScheme(), ['http', 'https'], true)) {
         throw new Exception(sprintf('the URL must contains a HTTP or HTTPS scheme %s', $raw_url));
     }
 
-    return $url;
+    return (string) $url;
 }
 
 /**
@@ -51,6 +49,13 @@ function filter_uri(string $raw_url): string
  */
 function filter_array_value($prop): bool
 {
-    return (is_string($prop) && '' !== $prop)
-        || (is_array($prop) && !empty($prop));
+    if (is_string($prop) && '' !== $prop) {
+        return true;
+    }
+
+    if ($prop instanceof UriInterface) {
+        return true;
+    }
+
+    return is_array($prop) && !empty($prop);
 }

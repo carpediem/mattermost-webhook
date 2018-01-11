@@ -1,14 +1,14 @@
 <?php
 
-namespace Carpediem\Mattermost\Test;
+namespace Carpediem\Mattermost\Webhook\Test;
 
-use Carpediem\Mattermost\Attachment;
-use Carpediem\Mattermost\Exception;
+use Carpediem\Mattermost\Webhook\Attachment;
+use Carpediem\Mattermost\Webhook\Exception;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\Attachment
+ * @coversDefaultClass Carpediem\Mattermost\Webhook\Attachment
  */
 final class AttachmentTest extends TestCase
 {
@@ -64,10 +64,10 @@ final class AttachmentTest extends TestCase
         ;
 
         $this->assertSame('Example attachment', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $this->assertSame('https://example.com/photo.png', (string) $attachment->toArray()['thumb_url']);
 
         $attachment->title('Overwritten info');
         $this->assertSame('Overwritten info', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $this->assertSame('https://example.com/photo.png', (string) $attachment->toArray()['thumb_url']);
     }
 }

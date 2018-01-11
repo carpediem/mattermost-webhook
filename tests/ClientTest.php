@@ -1,9 +1,9 @@
 <?php
 
-namespace Carpediem\Mattermost\Test;
+namespace Carpediem\Mattermost\Webhook\Test;
 
-use Carpediem\Mattermost\Client;
-use Carpediem\Mattermost\Message;
+use Carpediem\Mattermost\Webhook\Client;
+use Carpediem\Mattermost\Webhook\Message;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\Mattermost
+ * @coversDefaultClass Carpediem\Mattermost\Webhook\Mattermost
  */
 final class ClientTest extends TestCase
 {

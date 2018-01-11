@@ -12,7 +12,7 @@
 */
 declare(strict_types=1);
 
-namespace Carpediem\Mattermost;
+namespace Carpediem\Mattermost\Webhook;
 
 use JsonSerializable;
 use Traversable;
@@ -44,7 +44,7 @@ final class Message implements JsonSerializable
     /**
      * The icon of the message.
      *
-     * @var string
+     * @var UriInterface
      */
     private $icon_url = '';
 
@@ -110,11 +110,11 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * @param string $icon_url
+     * @param string|UriInterface $icon_url
      *
      * @return self
      */
-    public function iconUrl(string $icon_url): self
+    public function iconUrl($icon_url): self
     {
         $this->icon_url = filter_uri($icon_url, 'icon_url');
 

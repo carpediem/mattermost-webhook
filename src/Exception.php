@@ -12,7 +12,7 @@
 */
 declare(strict_types=1);
 
-namespace Carpediem\Mattermost;
+namespace Carpediem\Mattermost\Webhook;
 
 class Exception extends \Exception
 {

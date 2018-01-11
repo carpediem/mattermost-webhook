@@ -15,6 +15,13 @@ You need **PHP >= 5.6.0** but the latest stable version of PHP is recommended.
 $ composer require carpediem/mattermost-php
 ```
 
+## Build status
+
+| branch       | status | minimum PHP version |
+| ------------ | ------ | ------------------- |
+| master       | [![Build Status](https://travis-ci.org/carpediem/mattermost-webhook.svg?branch=master)](https://travis-ci.org/carpediem/mattermost-webhook/tree/master) | PHP 7.0 |
+| 1.x          | [![Build Status](https://travis-ci.org/carpediem/mattermost-webhook.svg?branch=1.x)](https://github.com/carpediem/mattermost-webhook/tree/1.x) | PHP 5.6 |
+
 ## Basic usage
 
 The code above will simulate the roll of two six-sided die

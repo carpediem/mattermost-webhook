@@ -12,7 +12,7 @@
 */
 declare(strict_types=1);
 
-namespace Carpediem\Mattermost;
+namespace Carpediem\Mattermost\Webhook;
 
 use JsonSerializable;
 
@@ -69,14 +69,14 @@ final class Attachment implements JsonSerializable
      *
      * If no author_name is specified, this field does nothing.
      *
-     * @var string
+     * @var string|UriInterface
      */
     private $author_link;
 
     /**
      * An optional URL used to display a 16x16 pixel icon beside the author_name.
      *
-     * @var string
+     * @var string|UriInterface
      */
     private $author_icon;
 
@@ -111,7 +111,7 @@ final class Attachment implements JsonSerializable
      * Large images will be resized to a maximum width of 400px
      * or a maximum height of 300px, while still maintaining the original aspect ratio.
      *
-     * @var string
+     * @var string|UriInterface
      */
     private $image_url;
 
@@ -122,7 +122,7 @@ final class Attachment implements JsonSerializable
      * We recommend using an image that is already 75x75 pixels,
      * but larger images will be scaled down with the aspect ratio maintained.
      *
-     * @var string
+     * @var string|UriInterface
      */
     private $thumb_url;
 
@@ -235,11 +235,11 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $author_link
+     * @param string|UriInterface $author_link
      *
      * @return self
      */
-    public function authorLink(string $author_link): self
+    public function authorLink($author_link): self
     {
         $this->author_link = filter_uri($author_link, 'author_link');
 
@@ -247,24 +247,24 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $author_icon
+     * @param string|UriInterface $author_icon
      *
      * @return self
      */
-    public function authorIcon(string $author_icon): self
+    public function authorIcon($author_icon): self
     {
-        $this->author_icon = filter_uri(trim($author_icon), 'author_icon');
+        $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
     }
 
     /**
-     * @param string $title
-     * @param string $title_link
+     * @param string              $title
+     * @param string|UriInterface $title_link
      *
      * @return self
      */
-    public function title(string $title, string $title_link = null): self
+    public function title(string $title, $title_link = null): self
     {
         $this->title = trim($title);
         if ('' === $this->title || null === $title_link) {
@@ -273,7 +273,7 @@ final class Attachment implements JsonSerializable
             return $this;
         }
 
-        $this->title_link = filter_uri(trim($title_link), 'title_link');
+        $this->title_link = filter_uri($title_link, 'title_link');
 
         return $this;
     }
@@ -313,25 +313,25 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $image_url
+     * @param string|UriInterface $image_url
      *
      * @return self
      */
-    public function imageUrl(string $image_url): self
+    public function imageUrl($image_url): self
     {
-        $this->image_url = filter_uri(trim($image_url), 'image_url');
+        $this->image_url = filter_uri($image_url, 'image_url');
 
         return $this;
     }
 
     /**
-     * @param string $thumb_url
+     * @param string|UriInterface $thumb_url
      *
      * @return self
      */
-    public function thumbUrl(string $thumb_url): self
+    public function thumbUrl($thumb_url): self
     {
-        $this->thumb_url = filter_uri(trim($thumb_url), 'thumb_url');
+        $this->thumb_url = filter_uri($thumb_url, 'thumb_url');
 
         return $this;
     }
