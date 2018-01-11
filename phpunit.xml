@@ -12,7 +12,7 @@
          stopOnFailure="false">
 
     <testsuites>
-        <testsuite name="Dice Roller Test Suite">
+        <testsuite name="Carpediem Mattermost Webhook Test Suite">
             <directory>tests/</directory>
         </testsuite>
     </testsuites>

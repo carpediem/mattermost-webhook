@@ -46,6 +46,7 @@ final class Client
      */
     public function send($url, Message $message, array $options = []): ResponseInterface
     {
+        unset($options['body']);
         $options['Content-Type'] = 'application/json';
         $options['json'] = $message;
 

@@ -1,5 +1,5 @@
 {
-    "name": "carpediem/mattermost-php",
+    "name": "carpediem/mattermost-webhook",
     "description": "Mattermost PHP driver to send incoming webhooks",
     "homepage": "https://github.com/carpediem/mattermost-webhook",
     "version": "1.0.0",
