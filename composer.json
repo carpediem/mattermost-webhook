@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.7.0||^6.2"
+        "phpunit/phpunit": "^5.7.0"
     },
     "license": "MIT",
     "authors": [
@@ -37,8 +37,16 @@
         }
     },
     "scripts": {
-        "test": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
-        "phpunit": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text",
+        "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
+        "phpunit": "phpunit --coverage-text",
         "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
