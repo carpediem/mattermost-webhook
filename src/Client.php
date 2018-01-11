@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpediem\Mattermost;
+namespace Carpediem\Mattermost\Webhook;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ResponseInterface;
@@ -34,6 +34,7 @@ final class Client
      */
     public function send($url, Message $message, array $options = [])
     {
+        unset($options['body']);
         $options['Content-Type'] = 'application/json';
         $options['json'] = $message;
 

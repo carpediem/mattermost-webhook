@@ -1,4 +1,4 @@
-# Mattermost PHP Driver
+# Mattermost PHP Webhook
 
 This driver for Mattermost allows you to send message for [incoming webhooks](https://docs.mattermost.com/developer/webhooks-incoming.html).
 
@@ -12,8 +12,19 @@ You need **PHP >= 5.6.0** but the latest stable version of PHP is recommended.
 ## Installation
 
 ```bash
-$ composer require carpediem/mattermost-php
+$ composer require carpediem/mattermost-webhook
 ```
+
+
+## Build status
+
+
+| branch       | status | minimum PHP version |
+| ------------ | ------ | ------------------- |
+| master       | [![Build Status](https://travis-ci.org/carpediem/mattermost-webhook.svg?branch=master)](https://travis-ci.org/sabre-io/uri) | PHP 7.0 |
+| 1.x          | [![Build Status](https://travis-ci.org/carpediem/mattermost-webhook.svg?branch=1.x)](https://travis-ci.org/sabre-io/uri) | PHP 5.6 |
+
+
 
 ## Basic usage
 
@@ -25,9 +36,9 @@ The code above will simulate the roll of two six-sided die
 require __DIR__ . '/../vendor/autoload.php';
 
 use GuzzleHttp\Client as GuzzleClient;
-use Carpediem\Mattermost\Client;
-use Carpediem\Mattermost\Message;
-use Carpediem\Mattermost\Attachment;
+use Carpediem\Mattermost\Webhook\Client;
+use Carpediem\Mattermost\Webhook\Message;
+use Carpediem\Mattermost\Webhook\Attachment;
 
 $mattermost = new Client(new GuzzleClient());
 $message = (new Message())->text('This is a *test*.')
@@ -46,9 +57,9 @@ Use mattermost documentation to enables more options for the `Message` and or th
 require dirname(__DIR__).'/vendor/autoload.php';
 
 use GuzzleHttp\Client as GuzzleClient;
-use Carpediem\Mattermost\Attachment;
-use Carpediem\Mattermost\Client;
-use Carpediem\Mattermost\Message;
+use Carpediem\Mattermost\Webhook\Attachment;
+use Carpediem\Mattermost\Webhook\Client;
+use Carpediem\Mattermost\Webhook\Message;
 
 $message = (new Message())
     ->text('This is a *test*.')

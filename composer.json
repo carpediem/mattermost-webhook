@@ -1,7 +1,7 @@
 {
-    "name": "carpediem/mattermost-php",
+    "name": "carpediem/mattermost-webhook",
     "description": "Mattermost PHP driver to send incoming webhooks",
-    "homepage": "https://github.com/carpediem/mattermost-php",
+    "homepage": "https://github.com/carpediem/mattermost-webhook",
     "version": "1.0.0",
     "type": "library",
     "require": {
@@ -27,13 +27,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Carpediem\\Mattermost\\": "src/"
+            "Carpediem\\Mattermost\\Webhook\\": "src/"
         },
         "files": ["src/functions_include.php"]
     },
     "autoload-dev": {
         "psr-4": {
-            "Carpediem\\Mattermost\\Test\\": "tests"
+            "Carpediem\\Mattermost\\Webhook\\Test\\": "tests"
         }
     },
     "scripts": {

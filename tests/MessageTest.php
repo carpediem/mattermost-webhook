@@ -1,14 +1,14 @@
 <?php
 
-namespace Carpediem\Mattermost\Test;
+namespace Carpediem\Mattermost\Webhook\Test;
 
-use Carpediem\Mattermost\Attachment;
-use Carpediem\Mattermost\Exception;
-use Carpediem\Mattermost\Message;
+use Carpediem\Mattermost\Webhook\Attachment;
+use Carpediem\Mattermost\Webhook\Exception;
+use Carpediem\Mattermost\Webhook\Message;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\Message
+ * @coversDefaultClass Carpediem\Mattermost\WebhookMessage
  */
 final class MessageTest extends TestCase
 {

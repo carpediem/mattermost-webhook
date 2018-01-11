@@ -2,9 +2,9 @@
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
-use Carpediem\Mattermost\Attachment;
-use Carpediem\Mattermost\Client;
-use Carpediem\Mattermost\Message;
+use Carpediem\Mattermost\Webhook\Attachment;
+use Carpediem\Mattermost\Webhook\Client;
+use Carpediem\Mattermost\Webhook\Message;
 use GuzzleHttp\Client as GuzzleClient;
 
 $mattermost = new Client(new GuzzleClient());
