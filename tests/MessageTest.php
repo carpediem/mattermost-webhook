@@ -6,9 +6,10 @@ use Carpediem\Mattermost\Webhook\Attachment;
 use Carpediem\Mattermost\Webhook\Exception;
 use Carpediem\Mattermost\Webhook\Message;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\WebhookMessage
+ * @coversDefaultClass Carpediem\Mattermost\Webhook\Message
  */
 final class MessageTest extends TestCase
 {
@@ -34,12 +35,6 @@ final class MessageTest extends TestCase
         $this->assertNotEmpty($message->jsonSerialize());
     }
 
-    public function testBuilderThrowsExceptionWithNonStringableValue()
-    {
-        $this->expectException(Exception::class);
-        (new Message())->text(date_create());
-    }
-
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
@@ -48,7 +43,7 @@ final class MessageTest extends TestCase
 
     public function testBuilderThrowsExceptionWithInvalidAttachment()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(TypeError::class);
         (new Message())->attachment('foobar');
     }
 

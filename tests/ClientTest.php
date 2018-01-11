@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\WebhookMattermost
+ * @coversDefaultClass Carpediem\Mattermost\Webhook\Mattermost
  */
 final class ClientTest extends TestCase
 {

@@ -5,9 +5,10 @@ namespace Carpediem\Mattermost\Webhook\Test;
 use Carpediem\Mattermost\Webhook\Attachment;
 use Carpediem\Mattermost\Webhook\Exception;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
- * @coversDefaultClass Carpediem\Mattermost\WebhookAttachment
+ * @coversDefaultClass Carpediem\Mattermost\Webhook\Attachment
  */
 final class AttachmentTest extends TestCase
 {
@@ -43,7 +44,7 @@ final class AttachmentTest extends TestCase
 
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(TypeError::class);
         (new Attachment())->error()->fallback(date_create());
     }
 
@@ -63,10 +64,10 @@ final class AttachmentTest extends TestCase
         ;
 
         $this->assertSame('Example attachment', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $this->assertSame('https://example.com/photo.png', (string) $attachment->toArray()['thumb_url']);
 
         $attachment->title('Overwritten info');
         $this->assertSame('Overwritten info', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $this->assertSame('https://example.com/photo.png', (string) $attachment->toArray()['thumb_url']);
     }
 }

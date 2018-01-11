@@ -1,9 +1,22 @@
 <?php
+/**
+* This file is part of the Carpediem.Errors library
+*
+* @license http://opensource.org/licenses/MIT
+* @link https://github.com/carpediem/mattermost-php/
+* @version 0.1.0
+* @package carpediem.mattermost-php
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
+declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
 
 use JsonSerializable;
 use Traversable;
+use TypeError;
 
 final class Message implements JsonSerializable
 {
@@ -31,7 +44,7 @@ final class Message implements JsonSerializable
     /**
      * The icon of the message.
      *
-     * @var string
+     * @var UriInterface
      */
     private $icon_url = '';
 
@@ -55,7 +68,7 @@ final class Message implements JsonSerializable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return get_object_vars($this);
     }
@@ -65,9 +78,9 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function text($text)
+    public function text(string $text): self
     {
-        $this->text = filter_string($text, 'text');
+        $this->text = trim($text);
 
         return $this;
     }
@@ -77,9 +90,9 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function username($username)
+    public function username(string $username): self
     {
-        $this->username = filter_string($username, 'username');
+        $this->username = trim($username);
 
         return $this;
     }
@@ -89,19 +102,19 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function channel($channel)
+    public function channel(string $channel): self
     {
-        $this->channel = filter_string($channel, 'channel');
+        $this->channel = trim($channel);
 
         return $this;
     }
 
     /**
-     * @param string $icon_url
+     * @param string|UriInterface $icon_url
      *
      * @return self
      */
-    public function iconUrl($icon_url)
+    public function iconUrl($icon_url): self
     {
         $this->icon_url = filter_uri($icon_url, 'icon_url');
 
@@ -115,7 +128,7 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function attachment($attachment)
+    public function attachment($attachment): self
     {
         if (is_callable($attachment)) {
             $item = new Attachment();
@@ -131,7 +144,7 @@ final class Message implements JsonSerializable
             return $this;
         }
 
-        throw new Exception(sprintf('The submitted argument must be a callable or a %s class', Attachment::class));
+        throw new TypeError(sprintf('The submitted argument must be a callable or a %s class', Attachment::class));
     }
 
     /**
@@ -141,7 +154,7 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function attachments($attachments)
+    public function attachments($attachments): self
     {
         $this->attachments = [];
         foreach ($attachments as $attachment) {
