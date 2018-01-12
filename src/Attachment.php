@@ -16,6 +16,7 @@ namespace Carpediem\Mattermost\Webhook;
 
 use Iterator;
 use JsonSerializable;
+use TypeError;
 
 final class Attachment implements JsonSerializable
 {
@@ -325,12 +326,16 @@ final class Attachment implements JsonSerializable
     /**
      * Override all fields with an array
      *
-     * @param array $fields
+     * @param array|Traversable $fields
      *
      * @return self
      */
-    public function setFields(array $fields = []): self
+    public function setFields($fields): self
     {
+        if (!is_iterable($fields)) {
+            throw new TypeError(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($fields)));
+        }
+
         $this->fields = [];
         foreach ($fields as $field) {
             $this->addField(...$field);

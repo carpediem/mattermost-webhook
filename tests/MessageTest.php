@@ -38,6 +38,12 @@ final class MessageTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Attachment::class, $message->getAttachments());
     }
 
+    public function testBuilderThrowsExceptionWithSetAttachments()
+    {
+        $this->expectException(TypeError::class);
+        (new Message())->setAttachments((object) ['foo', 'bar']);
+    }
+
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);

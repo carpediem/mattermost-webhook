@@ -17,6 +17,7 @@ namespace Carpediem\Mattermost\Webhook;
 use Iterator;
 use JsonSerializable;
 use Traversable;
+use TypeError;
 
 final class Message implements JsonSerializable
 {
@@ -192,6 +193,10 @@ final class Message implements JsonSerializable
      */
     public function setAttachments($attachments): self
     {
+        if (!is_iterable($attachments)) {
+            throw new TypeError(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($attachments)));
+        }
+
         $this->attachments = [];
         foreach ($attachments as $attachment) {
             $this->addAttachment($attachment);

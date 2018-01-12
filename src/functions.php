@@ -52,3 +52,19 @@ function filter_array_value($prop): bool
     return (is_string($prop) && '' !== $prop)
         || (is_array($prop) && !empty($prop));
 }
+
+if (!function_exists('\is_iterable')) {
+    /**
+     * Tell whether the content of the variable is iterable
+     *
+     * @see http://php.net/manual/en/function.is-iterable.php
+     *
+     * @param mixed $iterable
+     *
+     * @return bool
+     */
+    function is_iterable($iterable): bool
+    {
+        return is_array($iterable) || $iterable instanceof Traversable;
+    }
+}
