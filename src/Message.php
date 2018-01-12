@@ -190,6 +190,10 @@ final class Message implements JsonSerializable
      */
     public function setAttachments($attachments)
     {
+        if (!is_iterable($attachments)) {
+            throw new Exception(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($attachments)));
+        }
+
         $this->attachments = [];
         foreach ($attachments as $attachment) {
             $this->addAttachment($attachment);

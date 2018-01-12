@@ -64,6 +64,12 @@ final class AttachmentTest extends TestCase
         (new Attachment())->setThumbUrl('wss://github.com');
     }
 
+    public function testBuilderThrowsExceptionWithSetFields()
+    {
+        $this->expectException(Exception::class);
+        (new Attachment())->setFields((object) ['foo', 'bar']);
+    }
+
     public function testMutability()
     {
         $attachment = new Attachment();

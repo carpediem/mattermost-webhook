@@ -48,6 +48,12 @@ final class MessageTest extends TestCase
         (new Message())->setIconUrl('//github.com');
     }
 
+    public function testBuilderThrowsExceptionWithSetAttachments()
+    {
+        $this->expectException(Exception::class);
+        (new Message())->setAttachments((object) ['foo', 'bar']);
+    }
+
     public function testMutability()
     {
         $message = new Message();

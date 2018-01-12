@@ -331,6 +331,10 @@ final class Attachment implements JsonSerializable
      */
     public function setFields($fields)
     {
+        if (!is_iterable($fields)) {
+            throw new Exception(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($fields)));
+        }
+
         $this->fields = [];
         foreach ($fields as $field) {
             $this->addField(...$field);
