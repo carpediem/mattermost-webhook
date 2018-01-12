@@ -34,16 +34,15 @@ The code below will send a notification to a mattermost compliant service.
 ```php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require '/path/to/vendor/autoload.php';
 
 use GuzzleHttp\Client as GuzzleClient;
 use Carpediem\Mattermost\Webhook\Client;
 use Carpediem\Mattermost\Webhook\Message;
-use Carpediem\Mattermost\Webhook\Attachment;
 
 $mattermost = new Client(new GuzzleClient());
-$message = (new Message())->setText('This is a *test*.')
-$response = $mattermost->send('https://your_mattermost_webhook_url', $message, ['http_errors' => false]);
+$message = (new Message())->setText('This is a *test*.');
+$response = $mattermost->send('https://your_mattermost_webhook_url', $message);
 
 //$response is a Psr7\Http\Message\ResponseInterface.
 ```
