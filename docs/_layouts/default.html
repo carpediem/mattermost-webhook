@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+{% if page.url == '/' %}
+        <title>{{ site.data.project.title }} - {{ site.data.project.tagline }}</title>
+{% else %}
+        <title>{{ page.title }} - {{ site.data.project.title }}</title>
+{% endif %}
+        <meta name="description" content="{{ site.data.project.description }}">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Raleway:400,900,700">
+        <link rel="stylesheet" href="//carpediem.github.io/css/normalize.css">
+        <link rel="stylesheet" href="//carpediem.github.io/css/style.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" type="image/x-icon" href="https://carpediem.github.io/favicon.ico">
+        <link rel="apple-touch-icon" sizes="57x57" href="http://carpediem.github.io/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://carpediem.github.io/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://carpediem.github.io/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="http://carpediem.github.io/apple-touch-icon-144x144.png">
+    </head>
+    <body>
+        <header>
+            <menu>
+                <ul>
+{% for link in site.data.menu %}
+                    <li{% if page.url == link[1] %} class="active"{% endif %}><a href="{{ site.baseurl }}{{ link[1] }}">{{ link[0] }}</a></li>
+{% endfor %}
+                </ul>
+            </menu>
+{% if page.url == '/' %}
+        <div class="page-title"><h1>{{ site.data.project.title }} <em>{{ site.data.project.tagline }}</em></h1></div>
+{% else %}
+        <div class="page-title"><h1>{{ page.title }}</h1></div>
+{% endif %}
+        </header>
+        <main>
+            <article>
+{{ content }}
+            </article>
+        </main>
+        <footer>
+            <p><a href="http://carpediem.github.io" title="Carpe Diem"><strong>CarpeDiem</strong></a></p>
+        </footer>
+        <script src="http://carpediem.github.io/js/anchorList.js"></script>
+    </body>
+</html>

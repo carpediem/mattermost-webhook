@@ -1,0 +1,8 @@
+table td, table th {
+	border:1px solid #aaa;
+	padding:.3em;
+}
+
+table th {
+	background-color:#fff;
+}
