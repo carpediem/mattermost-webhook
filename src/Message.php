@@ -1,15 +1,15 @@
 <?php
 /**
- * This file is part of the Carpediem.Errors library
- *
- * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 1.0.0
- * @package carpediem.mattermost-webhook
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+* This file is part of the Carpediem.Errors library
+*
+* @license http://opensource.org/licenses/MIT
+* @link https://github.com/carpediem/mattermost-php/
+* @version 0.1.0
+* @package carpediem.mattermost-php
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 namespace Carpediem\Mattermost\Webhook;
 
@@ -42,7 +42,7 @@ final class Message implements JsonSerializable
     /**
      * The icon of the message.
      *
-     * @var string
+     * @var UriInterface
      */
     private $icon_url = '';
 
@@ -58,7 +58,9 @@ final class Message implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array_filter($this->toArray(), __NAMESPACE__.'\\filter_array_value');
+        $arr = get_object_vars($this);
+
+        return array_filter($arr, __NAMESPACE__.'\\filter_array_value');
     }
 
     /**
@@ -68,7 +70,13 @@ final class Message implements JsonSerializable
      */
     public function toArray()
     {
-        return get_object_vars($this);
+        $arr = get_object_vars($this);
+
+        foreach ($arr['attachments'] as $offset => $attachment) {
+            $arr['attachments'][$offset] = $attachment->toArray();
+        }
+
+        return $arr;
     }
 
     /**
@@ -76,7 +84,7 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function text($text)
+    public function setText($text)
     {
         $this->text = filter_string($text, 'text');
 
@@ -84,11 +92,21 @@ final class Message implements JsonSerializable
     }
 
     /**
+     * Returns the text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
      * @param string $username
      *
      * @return self
      */
-    public function username($username)
+    public function setUsername($username)
     {
         $this->username = filter_string($username, 'username');
 
@@ -96,11 +114,21 @@ final class Message implements JsonSerializable
     }
 
     /**
+     * Returns the username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
      * @param string $channel
      *
      * @return self
      */
-    public function channel($channel)
+    public function setChannel($channel)
     {
         $this->channel = filter_string($channel, 'channel');
 
@@ -108,15 +136,35 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * @param string $icon_url
+     * Returns the channel
+     *
+     * @return string
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param string|UriInterface $icon_url
      *
      * @return self
      */
-    public function iconUrl($icon_url)
+    public function setIconUrl($icon_url)
     {
         $this->icon_url = filter_uri($icon_url, 'icon_url');
 
         return $this;
+    }
+
+    /**
+     * Returns the icon url
+     *
+     * @return string
+     */
+    public function getIconUrl()
+    {
+        return $this->icon_url;
     }
 
     /**
@@ -126,23 +174,11 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function attachment($attachment)
+    public function addAttachment(Attachment $attachment)
     {
-        if (is_callable($attachment)) {
-            $item = new Attachment();
-            $attachment($item);
+        $this->attachments[] = $attachment;
 
-            $this->attachments[] = $item;
-            return $this;
-        }
-
-        if ($attachment instanceof Attachment) {
-            $this->attachments[] = $attachment;
-
-            return $this;
-        }
-
-        throw new Exception(sprintf('The submitted argument must be a callable or a %s class', Attachment::class));
+        return $this;
     }
 
     /**
@@ -152,13 +188,25 @@ final class Message implements JsonSerializable
      *
      * @return self
      */
-    public function attachments($attachments)
+    public function setAttachments($attachments)
     {
         $this->attachments = [];
         foreach ($attachments as $attachment) {
-            $this->attachment($attachment);
+            $this->addAttachment($attachment);
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the Attachement objects
+     *
+     * @return Attachment[]
+     */
+    public function getAttachments()
+    {
+        foreach ($this->attachments as $attachment) {
+            yield $attachment;
+        }
     }
 }

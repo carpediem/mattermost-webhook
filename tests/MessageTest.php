@@ -18,47 +18,43 @@ final class MessageTest extends TestCase
         $this->assertEmpty($message->jsonSerialize());
         $this->assertNotEmpty($message->toArray());
     }
-
     public function testBuilder()
     {
         $message = (new Message())
-            ->text('This is a *test*.')
-            ->channel('tests')
-            ->username('A Tester')
-            ->iconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
-            ->attachment(function (Attachment $attachment) {
-                $attachment->success();
-            })
+            ->setText('This is a *test*.')
+            ->setChannel('tests')
+            ->setUsername('A Tester')
+            ->setIconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
+            ->addAttachment(new Attachment())
         ;
         $this->assertNotEmpty($message->toArray());
         $this->assertNotEmpty($message->jsonSerialize());
+        $this->assertSame('This is a *test*.', $message->getText());
+        $this->assertSame('tests', $message->getChannel());
+        $this->assertSame('A Tester', $message->getUsername());
+        $this->assertSame('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif', $message->getIconUrl());
+        $this->assertContainsOnlyInstancesOf(Attachment::class, $message->getAttachments());
     }
 
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
         $this->expectException(Exception::class);
-        (new Message())->text(date_create());
+        (new Message())->setText(date_create());
     }
 
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
-        (new Message())->iconUrl('//github.com');
-    }
-
-    public function testBuilderThrowsExceptionWithInvalidAttachment()
-    {
-        $this->expectException(Exception::class);
-        (new Message())->attachment('foobar');
+        (new Message())->setIconUrl('//github.com');
     }
 
     public function testMutability()
     {
         $message = new Message();
-        $message->text('Coucou it\'s me');
-        $message->attachments([new Attachment(), new Attachment()]);
-        $this->assertSame('Coucou it\'s me', $message->toArray()['text']);
-        $message->text('Overwritten info');
-        $this->assertSame('Overwritten info', $message->toArray()['text']);
+        $message->setText('Coucou it\'s me');
+        $message->setAttachments([new Attachment(), new Attachment()]);
+        $this->assertSame('Coucou it\'s me', $message->getText());
+        $message->setText('Overwritten info');
+        $this->assertSame('Overwritten info', $message->getText());
     }
 }

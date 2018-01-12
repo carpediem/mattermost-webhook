@@ -21,52 +21,62 @@ final class AttachmentTest extends TestCase
     public function testBuilder()
     {
         $attachment = (new Attachment())
-            ->fallback('This is the fallback test for the attachment.')
-            ->success()
-            ->pretext('This is optional pretext that shows above the attachment.')
-            ->text('This is the text. **Finaly!**')
-            ->authorName('Mattermost')
-            ->authorIcon('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png')
-            ->authorLink('http://www.mattermost.org/')
-            ->title('Example attachment')
-            ->fields([
+            ->setFallback('This is the fallback test for the attachment.')
+            ->setPretext('This is optional pretext that shows above the attachment.')
+            ->setText('This is the text. **Finaly!**')
+            ->setAuthorName('Mattermost')
+            ->setAuthorIcon('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png')
+            ->setAuthorLink('http://www.mattermost.org/')
+            ->setTitle('Example attachment', 'http://www.example.com')
+            ->setFields([
                 ['Long field', 'Testing with a very long piece of text that will take up the whole width of the table. And then some more text to make it extra long.', false],
                 ['Column one', 'Testing.', true],
                 ['Column two', 'Testing.', true],
                 ['Column one again', 'Testing.', true],
             ])
-            ->imageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png')
+            ->setColor('#ff3300')
+            ->setImageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png')
         ;
         $this->assertNotEmpty($attachment->toArray());
         $this->assertNotEmpty($attachment->jsonSerialize());
+        $this->assertSame('#ff3300', $attachment->getColor());
+        $this->assertSame('This is the fallback test for the attachment.', $attachment->getFallback());
+        $this->assertSame('This is optional pretext that shows above the attachment.', $attachment->getPretext());
+        $this->assertSame('This is the text. **Finaly!**', $attachment->getText());
+        $this->assertSame('Mattermost', $attachment->getAuthorName());
+        $this->assertSame('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png', $attachment->getAuthorIcon());
+        $this->assertSame('http://www.mattermost.org/', $attachment->getAuthorLink());
+        $this->assertSame('Example attachment', $attachment->getTitle());
+        $this->assertSame('http://www.example.com', $attachment->getTitleLink());
+        $this->assertSame('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png', $attachment->getImageUrl());
+        $this->assertCount(4, $attachment->getFields());
     }
 
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
         $this->expectException(Exception::class);
-        (new Attachment())->error()->fallback(date_create());
+        (new Attachment())->setFallback(date_create());
     }
 
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
-        (new Attachment())->thumbUrl('wss://github.com');
+        (new Attachment())->setThumbUrl('wss://github.com');
     }
 
     public function testMutability()
     {
         $attachment = new Attachment();
         $attachment
-            ->info()
-            ->thumbUrl('https://example.com/photo.png')
-            ->title('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
+            ->setThumbUrl('https://example.com/photo.png')
+            ->setTitle('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
         ;
 
-        $this->assertSame('Example attachment', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $this->assertSame('Example attachment', $attachment->getTitle());
+        $this->assertSame('https://example.com/photo.png', $attachment->getThumbUrl());
 
-        $attachment->title('Overwritten info');
-        $this->assertSame('Overwritten info', $attachment->toArray()['title']);
-        $this->assertSame('https://example.com/photo.png', $attachment->toArray()['thumb_url']);
+        $attachment->setTitle('Overwritten info');
+        $this->assertSame('Overwritten info', $attachment->getTitle());
+        $this->assertSame('https://example.com/photo.png', $attachment->getThumbUrl());
     }
 }

@@ -1,19 +1,21 @@
 <?php
 /**
- * This file is part of the Carpediem.Errors library
- *
- * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 1.0.0
- * @package carpediem.mattermost-webhook
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+* This file is part of the Carpediem.Errors library
+*
+* @license http://opensource.org/licenses/MIT
+* @link https://github.com/carpediem/mattermost-php/
+* @version 0.1.0
+* @package carpediem.mattermost-php
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 namespace Carpediem\Mattermost\Webhook;
 
+use Iterator;
 use JsonSerializable;
+use Traversable;
 
 final class Attachment implements JsonSerializable
 {
@@ -24,7 +26,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $fallback;
+    private $fallback = '';
 
     /**
      * A hex color code that will be used as the left border color for the attachment.
@@ -33,14 +35,14 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $color;
+    private $color = '';
 
     /**
      * An optional line of text that will be shown above the attachment.
      *
      * @var string
      */
-    private $pretext;
+    private $pretext = '';
 
     /**
      * The text to be included in the attachment.
@@ -52,7 +54,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $text;
+    private $text = '';
 
     /**
      * An optional name used to identify the author.
@@ -61,7 +63,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $author_name;
+    private $author_name = '';
 
     /**
      * An optional URL used to hyperlink the author_name.
@@ -70,28 +72,28 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $author_link;
+    private $author_link = '';
 
     /**
      * An optional URL used to display a 16x16 pixel icon beside the author_name.
      *
      * @var string
      */
-    private $author_icon;
+    private $author_icon = '';
 
     /**
      * An optional title displayed below the author information in the attachment.
      *
      * @var string
      */
-    private $title;
+    private $title = '';
 
     /**
      * An optional URL used to hyperlink the title.
      *
      * If no title is specified, this field does nothing.
      *
-     * @var string
+     * @var string|null
      */
     private $title_link;
 
@@ -110,9 +112,9 @@ final class Attachment implements JsonSerializable
      * Large images will be resized to a maximum width of 400px
      * or a maximum height of 300px, while still maintaining the original aspect ratio.
      *
-     * @var string
+     * @var string|UriInterface
      */
-    private $image_url;
+    private $image_url = '';
 
     /**
      * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
@@ -121,9 +123,10 @@ final class Attachment implements JsonSerializable
      * We recommend using an image that is already 75x75 pixels,
      * but larger images will be scaled down with the aspect ratio maintained.
      *
-     * @var string
+     * @var string|UriInterface
      */
-    private $thumb_url;
+    private $thumb_url = '';
+
 
     /**
      * {@inheritdoc}
@@ -140,15 +143,15 @@ final class Attachment implements JsonSerializable
      */
     public function toArray()
     {
-        return get_object_vars($this);
+        return  get_object_vars($this);
     }
 
     /**
-     * @param string $fallback
-     *
-     * @return self
-     */
-    public function fallback($fallback)
+      * @param string $fallback
+      *
+      * @return self
+      */
+    public function setFallback($fallback)
     {
         $this->fallback = filter_string($fallback, 'fallback');
 
@@ -156,11 +159,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getFallback()
+    {
+        return $this->fallback;
+    }
+
+    /**
      * @param string $color
      *
      * @return self
      */
-    public function color($color)
+    public function setColor($color)
     {
         $this->color = filter_string($color, 'color');
 
@@ -168,33 +179,11 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * Set a green color for the attachment.
-     *
-     * @return self
+     * @return string
      */
-    public function success()
+    public function getColor()
     {
-        return $this->color('#22BC66');
-    }
-
-    /**
-     * Set a red color for the attachment.
-     *
-     * @return self
-     */
-    public function error()
-    {
-        return $this->color('#DC4D2F');
-    }
-
-    /**
-     * Set a blue color for the attachment.
-     *
-     * @return self
-     */
-    public function info()
-    {
-        return $this->color('#3869D4');
+        return $this->color;
     }
 
     /**
@@ -202,7 +191,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function pretext($pretext)
+    public function setPretext($pretext)
     {
         $this->pretext = filter_string($pretext, 'pretext');
 
@@ -210,15 +199,31 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getPretext()
+    {
+        return $this->pretext;
+    }
+
+    /**
      * @param string $text
      *
      * @return self
      */
-    public function text($text)
+    public function setText($text)
     {
-        $this->text = $text;
+        $this->text = filter_string($text, 'text');
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
     }
 
     /**
@@ -226,7 +231,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function authorName($author_name)
+    public function setAuthorName($author_name)
     {
         $this->author_name = filter_string($author_name, 'author_name');
 
@@ -234,11 +239,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $author_link
+     * @return string
+     */
+    public function getAuthorName()
+    {
+        return $this->author_name;
+    }
+
+    /**
+     * @param string|UriInterface $author_link
      *
      * @return self
      */
-    public function authorLink($author_link)
+    public function setAuthorLink($author_link)
     {
         $this->author_link = filter_uri($author_link, 'author_link');
 
@@ -246,24 +259,40 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $author_icon
+     * @return string
+     */
+    public function getAuthorLink()
+    {
+        return $this->author_link;
+    }
+
+    /**
+     * @param string|UriInterface $author_icon
      *
      * @return self
      */
-    public function authorIcon($author_icon)
+    public function setAuthorIcon($author_icon)
     {
-        $this->author_icon = filter_string($author_icon, 'author_icon');
+        $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
     }
 
     /**
-     * @param string $title
-     * @param string $title_link
+     * @return string
+     */
+    public function getAuthorIcon()
+    {
+        return $this->author_icon;
+    }
+
+    /**
+     * @param string              $title
+     * @param string|UriInterface $title_link
      *
      * @return self
      */
-    public function title($title, $title_link = null)
+    public function setTitle($title, $title_link = null)
     {
         $this->title = filter_string($title, 'title');
         if ('' === $this->title || null === $title_link) {
@@ -278,17 +307,33 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitleLink()
+    {
+        return $this->title_link;
+    }
+
+    /**
      * Override all fields with an array
      *
-     * @param array $fields
+     * @param array|Traversable $fields
      *
      * @return self
      */
-    public function fields(array $fields = [])
+    public function setFields($fields)
     {
         $this->fields = [];
         foreach ($fields as $field) {
-            $this->field(...$field);
+            $this->addField(...$field);
         }
 
         return $this;
@@ -304,7 +349,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function field($title, $value, $short = true)
+    public function addField($title, $value, $short = true)
     {
         $this->fields[] = [
             'title' => filter_string($title, 'field title'),
@@ -316,11 +361,21 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $image_url
+     * @return Iterator
+     */
+    public function getFields()
+    {
+        foreach ($this->fields as $field) {
+            yield $field;
+        }
+    }
+
+    /**
+     * @param string|UriInterface $image_url
      *
      * @return self
      */
-    public function imageUrl($image_url)
+    public function setImageUrl($image_url)
     {
         $this->image_url = filter_uri($image_url, 'image_url');
 
@@ -328,14 +383,30 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $thumb_url
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->image_url;
+    }
+
+    /**
+     * @param string|UriInterface $thumb_url
      *
      * @return self
      */
-    public function thumbUrl($thumb_url)
+    public function setThumbUrl($thumb_url)
     {
         $this->thumb_url = filter_uri($thumb_url, 'thumb_url');
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumbUrl()
+    {
+        return $this->thumb_url;
     }
 }
