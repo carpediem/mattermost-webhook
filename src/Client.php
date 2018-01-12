@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 1.0.0
+ * @version 1.0.1
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
