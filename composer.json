@@ -4,6 +4,12 @@
     "homepage": "https://github.com/carpediem/mattermost-webhook",
     "version": "1.0.0",
     "type": "library",
+    "keywords": [
+        "mattermost",
+        "php5",
+        "webhook",
+        "psr-7"
+    ],
     "require": {
         "php": ">=5.6",
         "guzzlehttp/guzzle": "^6.2"

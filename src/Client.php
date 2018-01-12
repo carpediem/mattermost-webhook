@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Carpediem.Errors library
+ * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
@@ -20,7 +20,7 @@ use Psr\Http\Message\UriInterface;
 final class Client
 {
     /**
-     * @var Client
+     * @var GuzzleClient
      */
     private $client;
 
