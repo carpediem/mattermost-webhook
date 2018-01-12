@@ -1,6 +1,7 @@
 The MIT License
 ===============
 
+Copyright (c) 2018 Carpediem Belgique
 Copyright (c) 2016 Thibaud Dauce
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

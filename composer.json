@@ -2,8 +2,14 @@
     "name": "carpediem/mattermost-webhook",
     "description": "Mattermost PHP driver to send incoming webhooks",
     "homepage": "https://github.com/carpediem/mattermost-webhook",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "type": "library",
+    "keywords": [
+        "mattermost",
+        "php7",
+        "webhook",
+        "psr-7"
+    ],
     "require": {
         "php": ">=7.0",
         "guzzlehttp/guzzle": "^6.2"
@@ -40,5 +46,13 @@
         "test": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
         "phpunit": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text",
         "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

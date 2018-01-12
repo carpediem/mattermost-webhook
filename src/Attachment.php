@@ -1,15 +1,15 @@
 <?php
 /**
-* This file is part of the Carpediem.Errors library
-*
-* @license http://opensource.org/licenses/MIT
-* @link https://github.com/carpediem/mattermost-php/
-* @version 0.1.0
-* @package carpediem.mattermost-php
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the carpediem mattermost webhook library
+ *
+ * @license http://opensource.org/licenses/MIT
+ * @link https://github.com/carpediem/mattermost-php/
+ * @version 2.0.0
+ * @package carpediem.mattermost-webhook
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
@@ -281,7 +281,7 @@ final class Attachment implements JsonSerializable
     /**
      * @return string
      */
-    public function getAuthorIcon()
+    public function getAuthorIcon(): string
     {
         return $this->author_icon;
     }
@@ -381,7 +381,7 @@ final class Attachment implements JsonSerializable
     /**
      * @return string
      */
-    public function getImageUrl()
+    public function getImageUrl(): string
     {
         return $this->image_url;
     }
@@ -401,7 +401,7 @@ final class Attachment implements JsonSerializable
     /**
      * @return string
      */
-    public function getThumbUrl()
+    public function getThumbUrl(): string
     {
         return $this->thumb_url;
     }
