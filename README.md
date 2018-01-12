@@ -37,7 +37,7 @@ use Carpediem\Mattermost\Webhook\Message;
 use Carpediem\Mattermost\Webhook\Attachment;
 
 $mattermost = new Client(new GuzzleClient());
-$message = (new Message())->text('This is a *test*.')
+$message = (new Message())->setText('This is a *test*.')
 $response = $mattermost->send('https://your_mattermost_webhook_url', $message, ['http_errors' => false]);
 
 //$response is a Psr7\Http\Message\ResponseInterface.
@@ -57,30 +57,29 @@ use Carpediem\Mattermost\Webhook\Attachment;
 use Carpediem\Mattermost\Webhook\Client;
 use Carpediem\Mattermost\Webhook\Message;
 
+$attachment = (new Attachment())
+    ->setFallback('This is the fallback test for the attachment.')
+    ->setPretext('This is optional pretext that shows above the attachment.')
+    ->setText('This is the text. **Finaly!**')
+    ->setAuthorName('Mattermost')
+    ->setAuthorIcon('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png')
+    ->setAuthorLink('http://www.mattermost.org/')
+    ->setTitle('Example attachment')
+    ->setFields([
+        ['Long field', 'Testing with a very long piece of text that will take up the whole width of the table. And then some more text to make it extra long.', false],
+        ['Column one', 'Testing.', true],
+        ['Column two', 'Testing.', true],
+        ['Column one again', 'Testing.', true],
+    ])
+    ->setImageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png')
+;
+
 $message = (new Message())
-    ->text('This is a *test*.')
-    ->channel('alerts')
-    ->username('A Tester')
-    ->iconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
-    ->attachment(function (Attachment $attachment) {
-        $attachment
-            ->fallback('This is the fallback test for the attachment.')
-                ->success()
-                ->pretext('This is optional pretext that shows above the attachment.')
-                ->text('This is the text. **Finaly!**')
-                ->authorName('Mattermost')
-                ->authorIcon('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png')
-                ->authorLink('http://www.mattermost.org/')
-                ->title('Example attachment')
-                ->fields([
-                    ['Long field', 'Testing with a very long piece of text that will take up the whole width of the table. And then some more text to make it extra long.', false],
-                    ['Column one', 'Testing.', true],
-                    ['Column two', 'Testing.', true],
-                    ['Column one again', 'Testing.', true],
-                ])
-                ->imageUrl('http://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontal_WS.png')
-        ;
-    })
+    ->setText('This is a *test*.')
+    ->setChannel('alerts')
+    ->setUsername('A Tester')
+    ->setIconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
+    ->addAttachment($attachment)
 ;
 
 $mattermost = new Client(new GuzzleClient());

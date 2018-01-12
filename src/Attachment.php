@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
 
+use Iterator;
 use JsonSerializable;
 
 final class Attachment implements JsonSerializable
@@ -25,7 +26,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $fallback;
+    private $fallback = '';
 
     /**
      * A hex color code that will be used as the left border color for the attachment.
@@ -34,14 +35,14 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $color;
+    private $color = '';
 
     /**
      * An optional line of text that will be shown above the attachment.
      *
      * @var string
      */
-    private $pretext;
+    private $pretext = '';
 
     /**
      * The text to be included in the attachment.
@@ -53,7 +54,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $text;
+    private $text = '';
 
     /**
      * An optional name used to identify the author.
@@ -62,37 +63,37 @@ final class Attachment implements JsonSerializable
      *
      * @var string
      */
-    private $author_name;
+    private $author_name = '';
 
     /**
      * An optional URL used to hyperlink the author_name.
      *
      * If no author_name is specified, this field does nothing.
      *
-     * @var string|UriInterface
+     * @var string
      */
-    private $author_link;
+    private $author_link = '';
 
     /**
      * An optional URL used to display a 16x16 pixel icon beside the author_name.
      *
-     * @var string|UriInterface
+     * @var string
      */
-    private $author_icon;
+    private $author_icon = '';
 
     /**
      * An optional title displayed below the author information in the attachment.
      *
      * @var string
      */
-    private $title;
+    private $title = '';
 
     /**
      * An optional URL used to hyperlink the title.
      *
      * If no title is specified, this field does nothing.
      *
-     * @var string
+     * @var string|null
      */
     private $title_link;
 
@@ -113,7 +114,7 @@ final class Attachment implements JsonSerializable
      *
      * @var string|UriInterface
      */
-    private $image_url;
+    private $image_url = '';
 
     /**
      * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
@@ -124,7 +125,8 @@ final class Attachment implements JsonSerializable
      *
      * @var string|UriInterface
      */
-    private $thumb_url;
+    private $thumb_url = '';
+
 
     /**
      * {@inheritdoc}
@@ -141,15 +143,15 @@ final class Attachment implements JsonSerializable
      */
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return  get_object_vars($this);
     }
 
     /**
-     * @param string $fallback
-     *
-     * @return self
-     */
-    public function fallback(string $fallback): self
+      * @param string $fallback
+      *
+      * @return self
+      */
+    public function setFallback(string $fallback): self
     {
         $this->fallback = trim($fallback);
 
@@ -157,11 +159,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getFallback(): string
+    {
+        return $this->fallback;
+    }
+
+    /**
      * @param string $color
      *
      * @return self
      */
-    public function color(string $color): self
+    public function setColor(string $color): self
     {
         $this->color = trim($color);
 
@@ -169,33 +179,11 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * Set a green color for the attachment.
-     *
-     * @return self
+     * @return string
      */
-    public function success(): self
+    public function getColor(): string
     {
-        return $this->color('#22BC66');
-    }
-
-    /**
-     * Set a red color for the attachment.
-     *
-     * @return self
-     */
-    public function error(): self
-    {
-        return $this->color('#DC4D2F');
-    }
-
-    /**
-     * Set a blue color for the attachment.
-     *
-     * @return self
-     */
-    public function info(): self
-    {
-        return $this->color('#3869D4');
+        return $this->color;
     }
 
     /**
@@ -203,7 +191,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function pretext(string $pretext): self
+    public function setPretext(string $pretext): self
     {
         $this->pretext = trim($pretext);
 
@@ -211,11 +199,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getPretext(): string
+    {
+        return $this->pretext;
+    }
+
+    /**
      * @param string $text
      *
      * @return self
      */
-    public function text(string $text): self
+    public function setText(string $text): self
     {
         $this->text = trim($text);
 
@@ -223,11 +219,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    /**
      * @param string $author_name
      *
      * @return self
      */
-    public function authorName(string $author_name): self
+    public function setAuthorName(string $author_name): self
     {
         $this->author_name = trim($author_name);
 
@@ -235,11 +239,19 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getAuthorName(): string
+    {
+        return $this->author_name;
+    }
+
+    /**
      * @param string|UriInterface $author_link
      *
      * @return self
      */
-    public function authorLink($author_link): self
+    public function setAuthorLink($author_link): self
     {
         $this->author_link = filter_uri($author_link, 'author_link');
 
@@ -247,15 +259,31 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getAuthorLink(): string
+    {
+        return $this->author_link;
+    }
+
+    /**
      * @param string|UriInterface $author_icon
      *
      * @return self
      */
-    public function authorIcon($author_icon): self
+    public function setAuthorIcon($author_icon): self
     {
         $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorIcon()
+    {
+        return $this->author_icon;
     }
 
     /**
@@ -264,7 +292,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function title(string $title, $title_link = null): self
+    public function setTitle(string $title, $title_link = null): self
     {
         $this->title = trim($title);
         if ('' === $this->title || null === $title_link) {
@@ -279,17 +307,33 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitleLink()
+    {
+        return $this->title_link;
+    }
+
+    /**
      * Override all fields with an array
      *
      * @param array $fields
      *
      * @return self
      */
-    public function fields(array $fields = []): self
+    public function setFields(array $fields = []): self
     {
         $this->fields = [];
         foreach ($fields as $field) {
-            $this->field(...$field);
+            $this->addField(...$field);
         }
 
         return $this;
@@ -305,7 +349,7 @@ final class Attachment implements JsonSerializable
      *
      * @return self
      */
-    public function field(string $title, string $value, bool $short = true): self
+    public function addField(string $title, string $value, bool $short = true): self
     {
         $this->fields[] = ['title' => trim($title), 'value' => trim($value), 'short' => $short];
 
@@ -313,11 +357,21 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return Iterator
+     */
+    public function getFields(): Iterator
+    {
+        foreach ($this->fields as $field) {
+            yield $field;
+        }
+    }
+
+    /**
      * @param string|UriInterface $image_url
      *
      * @return self
      */
-    public function imageUrl($image_url): self
+    public function setImageUrl($image_url): self
     {
         $this->image_url = filter_uri($image_url, 'image_url');
 
@@ -325,14 +379,30 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->image_url;
+    }
+
+    /**
      * @param string|UriInterface $thumb_url
      *
      * @return self
      */
-    public function thumbUrl($thumb_url): self
+    public function setThumbUrl($thumb_url): self
     {
         $this->thumb_url = filter_uri($thumb_url, 'thumb_url');
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumbUrl()
+    {
+        return $this->thumb_url;
     }
 }
