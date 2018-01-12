@@ -81,7 +81,7 @@ if (!function_exists('\is_iterable')) {
      *
      * @return bool
      */
-    function is_iterable($iterable): bool
+    function is_iterable($iterable)
     {
         return is_array($iterable) || $iterable instanceof Traversable;
     }
