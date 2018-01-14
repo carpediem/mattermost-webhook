@@ -86,4 +86,15 @@ final class AttachmentTest extends TestCase
         $this->assertSame('Overwritten info', $attachment->getTitle());
         $this->assertSame('https://example.com/photo.png', $attachment->getThumbUrl());
     }
+
+    public function testSetState()
+    {
+        $attachment = (new Attachment())
+            ->setThumbUrl('https://example.com/photo.png')
+            ->setTitle('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
+        ;
+
+        $generatedAttachment = eval('return '.var_export($attachment, true).';');
+        $this->assertEquals($attachment, $generatedAttachment);
+    }
 }

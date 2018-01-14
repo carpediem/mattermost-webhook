@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 2.0.0
+ * @version 2.1.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -54,7 +54,42 @@ final class Message implements JsonSerializable
      *
      * @var Attachment[]
      */
-    public $attachments = [];
+    private $attachments = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function __set_state(array $prop)
+    {
+        return (new self())
+            ->setText($prop['text'])
+            ->setUsername($prop['username'])
+            ->setChannel($prop['channel'])
+            ->setIconUrl($prop['icon_url'])
+            ->setAttachments($prop['attachments'])
+        ;
+    }
+
+    /**
+     * Returns a new instance from an array
+     *
+     * @param array $arr
+     *
+     * @return self
+     */
+    public static function createFromArray(array $arr): self
+    {
+        $prop = array_merge((new self())->toArray(), $arr);
+
+        foreach ($prop['attachments'] as $offset => $attachment) {
+            if (!$attachment instanceof Attachment) {
+                $attachment = Attachment::createFromArray($attachment);
+            }
+            $prop['attachments'][$offset] = $attachment;
+        }
+
+        return self::__set_state($prop);
+    }
 
     /**
      * {@inheritdoc}

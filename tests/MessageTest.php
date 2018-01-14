@@ -65,4 +65,22 @@ final class MessageTest extends TestCase
         $message->setText('Overwritten info');
         $this->assertSame('Overwritten info', $message->getText());
     }
+
+    public function testSetState()
+    {
+        $message = new Message();
+        $message->setText('Coucou it\'s me');
+        $message->setAttachments([new Attachment(), new Attachment()]);
+
+        $generatedMessage = eval('return '.var_export($message, true).';');
+        $this->assertEquals($message, $generatedMessage);
+    }
+
+    public function testCreateFromArray()
+    {
+        $message = new Message();
+        $message->setText('Coucou it\'s me');
+        $message->setAttachments([new Attachment(), new Attachment()]);
+        $this->assertEquals($message, Message::createFromArray($message->toArray()));
+    }
 }

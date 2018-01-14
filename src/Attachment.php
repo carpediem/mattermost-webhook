@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 2.0.0
+ * @version 2.1.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -128,6 +128,39 @@ final class Attachment implements JsonSerializable
      */
     private $thumb_url = '';
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function __set_state(array $prop)
+    {
+        return (new self())
+            ->setFallback($prop['fallback'])
+            ->setColor($prop['color'])
+            ->setPretext($prop['pretext'])
+            ->setText($prop['text'])
+            ->setTitle($prop['title'], $prop['title_link'])
+            ->setAuthorName($prop['author_name'])
+            ->setAuthorLink($prop['author_link'])
+            ->setAuthorIcon($prop['author_icon'])
+            ->setFields($prop['fields'])
+            ->setImageUrl($prop['image_url'])
+            ->setThumbUrl($prop['thumb_url'])
+        ;
+    }
+
+    /**
+     * Returns a new instance from an array
+     *
+     * @param array $arr
+     *
+     * @return self
+     */
+    public static function createFromArray(array $arr): self
+    {
+        $prop = array_merge((new self())->toArray(), $arr);
+
+        return self::__set_state($prop);
+    }
 
     /**
      * {@inheritdoc}
@@ -296,7 +329,7 @@ final class Attachment implements JsonSerializable
     public function setTitle(string $title, $title_link = null): self
     {
         $this->title = trim($title);
-        if ('' === $this->title || null === $title_link) {
+        if ('' === $this->title || '' == $title_link) {
             $this->title_link = null;
 
             return $this;
