@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 1.0.1
+ * @version 1.1.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -47,7 +47,7 @@ function filter_string($var, $name = '')
 function filter_uri($raw_url)
 {
     $url = Psr7\uri_for($raw_url);
-    if (in_array($url->getScheme(), ['http', 'https'], true)) {
+    if ('' == $url->__toString() || in_array($url->getScheme(), ['http', 'https'], true)) {
         return (string) $url;
     }
 

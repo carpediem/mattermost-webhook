@@ -85,4 +85,34 @@ final class AttachmentTest extends TestCase
         $this->assertSame('Overwritten info', $attachment->getTitle());
         $this->assertSame('https://example.com/photo.png', $attachment->getThumbUrl());
     }
+
+    public function testSetAuthor()
+    {
+        $attachment = (new Attachment())
+            ->setAuthor('', 'https://example.com', 'https://example.com');
+        $this->assertEmpty($attachment->getAuthorLink());
+        $this->assertEmpty($attachment->getAuthorIcon());
+        $this->assertEmpty($attachment->getAuthorName());
+
+        $this->assertEmpty((new Attachment())->setAuthorLink('https://example.com')->getAuthorLink());
+        $this->assertEmpty((new Attachment())->setAuthorIcon('https://example.com')->getAuthorIcon());
+        $this->assertSame(
+            'https://example.com',
+            (new Attachment())
+            ->setAuthorName('foobar')
+            ->setAuthorIcon('https://example.com')
+            ->getAuthorIcon()
+        );
+    }
+
+    public function testSetState()
+    {
+        $attachment = (new Attachment())
+            ->setThumbUrl('https://example.com/photo.png')
+            ->setTitle('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
+        ;
+
+        $generatedAttachment = eval('return '.var_export($attachment, true).';');
+        $this->assertEquals($attachment, $generatedAttachment);
+    }
 }
