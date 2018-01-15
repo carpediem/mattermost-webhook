@@ -57,6 +57,27 @@ final class Message implements JsonSerializable
     private $attachments = [];
 
     /**
+     * Returns a new instance from an array
+     *
+     * @param array $arr
+     *
+     * @return self
+     */
+    public static function fromArray(array $arr): self
+    {
+        $prop = $arr + (new self())->toArray();
+
+        foreach ($prop['attachments'] as $offset => $attachment) {
+            if (!$attachment instanceof Attachment) {
+                $attachment = Attachment::fromArray($attachment);
+            }
+            $prop['attachments'][$offset] = $attachment;
+        }
+
+        return self::__set_state($prop);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function __set_state(array $prop)
@@ -68,27 +89,6 @@ final class Message implements JsonSerializable
             ->setIconUrl($prop['icon_url'])
             ->setAttachments($prop['attachments'])
         ;
-    }
-
-    /**
-     * Returns a new instance from an array
-     *
-     * @param array $arr
-     *
-     * @return self
-     */
-    public static function createFromArray(array $arr): self
-    {
-        $prop = array_merge((new self())->toArray(), $arr);
-
-        foreach ($prop['attachments'] as $offset => $attachment) {
-            if (!$attachment instanceof Attachment) {
-                $attachment = Attachment::createFromArray($attachment);
-            }
-            $prop['attachments'][$offset] = $attachment;
-        }
-
-        return self::__set_state($prop);
     }
 
     /**

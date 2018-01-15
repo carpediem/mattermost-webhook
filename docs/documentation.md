@@ -79,16 +79,18 @@ final class Attachment implements JsonSerializable
     public function getThumbUrl(): string;
     public function getTitle(): string;
     public function getTitleLink(): ?string;
-    public function setAuthorName(string $author_name): self;
-    public function setAuthorLink(string|UriInterface$author_link): self;
-    public function setAuthorIcon(string|UriInterface$author_icon): self;
+    public function setAuthor(
+    	string $author_name,
+    	string|UriInterface $author_link = '',
+    	string|UriInterface $author_icon = ''
+    ): self;
     public function setColor(string $color): self;
     public function setFallback(string $fallback): self;
     public function setFields(iterable $fields): self;
-    public function setImageUrl(string|UriInterface$image_url): self;
+    public function setImageUrl(string|UriInterface $image_url): self;
     public function setPretext(string $pretext): self;
     public function setText(string $text): self;
-    public function setThumbUrl(string|UriInterface$thumb_url): self;
+    public function setThumbUrl(string|UriInterface $thumb_url): self;
     public function setTitle(string $title, string $title_link = null): self;
     public function toArray(): array;
 }
@@ -146,9 +148,11 @@ $attachment = (new Attachment())
     >setColor('#FF8000')
     ->setPretext('This is optional pretext that shows above the attachment.')
     ->setText('This is the text. **Finaly!**')
-    ->setAuthorName('Mattermost')
-    ->setAuthorIcon('http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png')
-    ->setAuthorLink('http://www.mattermost.org/')
+    ->setAuthor(
+    	'Mattermost',
+    	'http://www.mattermost.org/',
+    	'http://www.mattermost.org/wp-content/uploads/2016/04/icon_WS.png'
+    )
     ->setTitle('Example attachment')
     ->setFields([
         ['Long field', 'Testing with a very long piece of text that will take up the whole width of the table. And then some more text to make it extra long.', false],

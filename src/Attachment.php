@@ -129,6 +129,20 @@ final class Attachment implements JsonSerializable
     private $thumb_url = '';
 
     /**
+     * Returns a new instance from an array.
+     *
+     * @param array $arr
+     *
+     * @return self
+     */
+    public static function fromArray(array $arr): self
+    {
+        $prop = $arr + (new self())->toArray();
+
+        return self::__set_state($prop);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function __set_state(array $prop)
@@ -139,27 +153,11 @@ final class Attachment implements JsonSerializable
             ->setPretext($prop['pretext'])
             ->setText($prop['text'])
             ->setTitle($prop['title'], $prop['title_link'])
-            ->setAuthorName($prop['author_name'])
-            ->setAuthorLink($prop['author_link'])
-            ->setAuthorIcon($prop['author_icon'])
+            ->setAuthor($prop['author_name'], $prop['author_link'], $prop['author_icon'])
             ->setFields($prop['fields'])
             ->setImageUrl($prop['image_url'])
             ->setThumbUrl($prop['thumb_url'])
         ;
-    }
-
-    /**
-     * Returns a new instance from an array
-     *
-     * @param array $arr
-     *
-     * @return self
-     */
-    public static function createFromArray(array $arr): self
-    {
-        $prop = array_merge((new self())->toArray(), $arr);
-
-        return self::__set_state($prop);
     }
 
     /**
@@ -261,18 +259,33 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string $author_name
+     * Set attachment author.
+     *
+     * @param string              $author_name
+     * @param string|UriInterface $author_link
+     * @param string|UriInterface $author_icon
      *
      * @return self
      */
-    public function setAuthorName(string $author_name): self
+    public function setAuthor(string $author_name, $author_link = '', $author_icon = ''): self
     {
         $this->author_name = trim($author_name);
+        if ('' === $this->author_name) {
+            $this->author_link = '';
+            $this->author_icon = '';
+
+            return $this;
+        }
+
+        $this->author_link = filter_uri($author_link, 'author_link');
+        $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
     }
 
     /**
+     * Returns the author name.
+     *
      * @return string
      */
     public function getAuthorName(): string
@@ -281,18 +294,8 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string|UriInterface $author_link
+     * Returns the author link URI.
      *
-     * @return self
-     */
-    public function setAuthorLink($author_link): self
-    {
-        $this->author_link = filter_uri($author_link, 'author_link');
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getAuthorLink(): string
@@ -301,23 +304,64 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string|UriInterface $author_icon
+     * Returns the author icon URI
      *
-     * @return self
-     */
-    public function setAuthorIcon($author_icon): self
-    {
-        $this->author_icon = filter_uri($author_icon, 'author_icon');
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getAuthorIcon(): string
     {
         return $this->author_icon;
+    }
+
+    /**
+     * Sets the author name.
+     *
+     * @param string $author_name
+     *
+     * DEPRECATION WARNING! This method will be removed in the next major point release
+     *
+     * @deprecated deprecated since version 2.1.0
+     * @see Attachment::setAuthor
+     *
+     * @return self
+     */
+    public function setAuthorName(string $author_name): self
+    {
+        return $this->setAuthor($author_name, $this->author_link, $this->author_icon);
+    }
+
+    /**
+     * Sets the author link URI.
+     *
+     * @param string|UriInterface $author_link
+     *
+     * DEPRECATION WARNING! This method will be removed in the next major point release
+     *
+     * @deprecated deprecated since version 2.1.0
+     * @see Attachment::setAuthor
+     *
+     * @return self
+     */
+    public function setAuthorLink($author_link): self
+    {
+        return $this->setAuthor($this->author_name, $author_link, $this->author_icon);
+    }
+
+    /**
+     * Sets the author name icon URI.
+     *
+     * @param string|UriInterface $author_icon
+     *
+     * DEPRECATION WARNING! This method will be removed in the next major point release
+     *
+     * @deprecated deprecated since version 2.1.0
+     * @see Attachment::setAuthor
+     *
+     * @return self
+     */
+    public function setAuthorIcon($author_icon): self
+    {
+        return $this->setAuthor($this->author_name, $this->author_link, $author_icon);
     }
 
     /**
@@ -329,7 +373,7 @@ final class Attachment implements JsonSerializable
     public function setTitle(string $title, $title_link = null): self
     {
         $this->title = trim($title);
-        if ('' === $this->title || '' == $title_link) {
+        if ('' === $this->title || null === $title_link) {
             $this->title_link = null;
 
             return $this;

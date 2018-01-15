@@ -2,22 +2,26 @@
 
 All Notable changes to `mattermost-webhook` will be documented in this file
 
-## 2.1.0 - TBD
+## 2.1.0 - 2018-01-15
 
 ### Added
 
-`Message::createFromArray`
-`Message::__set_state`
-`Attachment::createFromArray`
-`Attachment::__set_state`
+- `Message::fromArray`
+- `Message::__set_state`
+- `Attachment::fromArray`
+- `Attachment::__set_state`
+- `Attachment::setAuthor`
 
 ### Fixed
 
-Message::attachment property visibility
+- `Message::attachment` property visibility
+- `filter_uri` should not throw on empty string
 
 ### Deprecated
 
-- None
+- `Attachment::setAuthorName` use `Attachment::setAuthor` instead
+- `Attachment::setAuthorLink` use `Attachment::setAuthor` instead
+- `Attachment::setAuthorIcon` use `Attachment::setAuthor` instead
 
 ### Removed
 

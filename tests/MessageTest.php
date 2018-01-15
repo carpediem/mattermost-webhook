@@ -81,6 +81,6 @@ final class MessageTest extends TestCase
         $message = new Message();
         $message->setText('Coucou it\'s me');
         $message->setAttachments([new Attachment(), new Attachment()]);
-        $this->assertEquals($message, Message::createFromArray($message->toArray()));
+        $this->assertEquals($message, Message::fromArray($message->toArray()));
     }
 }

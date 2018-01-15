@@ -87,6 +87,25 @@ final class AttachmentTest extends TestCase
         $this->assertSame('https://example.com/photo.png', $attachment->getThumbUrl());
     }
 
+    public function testSetAuthor()
+    {
+        $attachment = (new Attachment())
+            ->setAuthor('', 'https://example.com', 'https://example.com');
+        $this->assertEmpty($attachment->getAuthorLink());
+        $this->assertEmpty($attachment->getAuthorIcon());
+        $this->assertEmpty($attachment->getAuthorName());
+
+        $this->assertEmpty((new Attachment())->setAuthorLink('https://example.com')->getAuthorLink());
+        $this->assertEmpty((new Attachment())->setAuthorIcon('https://example.com')->getAuthorIcon());
+        $this->assertSame(
+            'https://example.com',
+            (new Attachment())
+            ->setAuthorName('foobar')
+            ->setAuthorIcon('https://example.com')
+            ->getAuthorIcon()
+        );
+    }
+
     public function testSetState()
     {
         $attachment = (new Attachment())

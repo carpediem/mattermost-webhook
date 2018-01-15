@@ -29,7 +29,7 @@ use Psr\Http\Message\UriInterface;
 function filter_uri($raw_url): string
 {
     $url = Psr7\uri_for($raw_url);
-    if ('' == (string) $url || in_array($url->getScheme(), ['http', 'https'], true)) {
+    if ('' == $url->__toString() || in_array($url->getScheme(), ['http', 'https'], true)) {
         return (string) $url;
     }
 
