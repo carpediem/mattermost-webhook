@@ -5,7 +5,6 @@ namespace Carpediem\Mattermost\Webhook\Test;
 use Carpediem\Mattermost\Webhook\Attachment;
 use Carpediem\Mattermost\Webhook\Exception;
 use PHPUnit\Framework\TestCase;
-use TypeError;
 
 /**
  * @coversDefaultClass Carpediem\Mattermost\Webhook\Attachment
@@ -58,12 +57,6 @@ final class AttachmentTest extends TestCase
         new Attachment();
     }
 
-    public function testBuilderThrowsExceptionWithNonStringableValue()
-    {
-        $this->expectException(TypeError::class);
-        (new Attachment('fallback'))->setFallback(date_create());
-    }
-
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
@@ -72,7 +65,7 @@ final class AttachmentTest extends TestCase
 
     public function testBuilderThrowsExceptionWithSetFields()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(Exception::class);
         (new Attachment('fallback'))->setFields((object) ['foo', 'bar']);
     }
 

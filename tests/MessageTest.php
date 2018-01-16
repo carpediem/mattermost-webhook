@@ -7,7 +7,6 @@ use Carpediem\Mattermost\Webhook\Exception;
 use Carpediem\Mattermost\Webhook\Message;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework\TestCase;
-use TypeError;
 
 /**
  * @coversDefaultClass Carpediem\Mattermost\Webhook\Message
@@ -46,7 +45,7 @@ final class MessageTest extends TestCase
 
     public function testBuilderThrowsExceptionWithSetAttachments()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(Exception::class);
         (new Message('This is a *test*.'))->setAttachments((object) ['foo', 'bar']);
     }
 
@@ -69,12 +68,6 @@ final class MessageTest extends TestCase
             'non absolute UriInterface' => [Psr7\uri_for('//github.com')],
             'non http/https UriInterface' => [Psr7\uri_for('ftp://github.com')],
         ];
-    }
-
-    public function testBuilderThrowsExceptionWithInvalidAttachment()
-    {
-        $this->expectException(TypeError::class);
-        (new Message('This is a *test*.'))->addAttachment('foobar');
     }
 
     public function testMutability()

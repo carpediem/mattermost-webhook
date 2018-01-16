@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
 
-use TypeError;
-
 final class Attachment implements AttachmentInterface
 {
     /**
@@ -433,7 +431,7 @@ final class Attachment implements AttachmentInterface
     public function setFields($fields): self
     {
         if (!is_iterable($fields)) {
-            throw new TypeError(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($fields)));
+            throw new Exception(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($fields)));
         }
 
         $this->fields = [];

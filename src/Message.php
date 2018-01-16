@@ -14,9 +14,7 @@ declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
 
-use Iterator;
 use Traversable;
-use TypeError;
 
 final class Message implements MessageInterface
 {
@@ -134,7 +132,7 @@ final class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function getAttachments(): Iterator
+    public function getAttachments()
     {
         foreach ($this->attachments as $attachment) {
             yield $attachment;
@@ -249,7 +247,7 @@ final class Message implements MessageInterface
     public function setAttachments($attachments): self
     {
         if (!is_iterable($attachments)) {
-            throw new TypeError(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($attachments)));
+            throw new Exception(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($attachments)));
         }
 
         $this->attachments = [];
