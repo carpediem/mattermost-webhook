@@ -3,8 +3,8 @@
  * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 2.1.1
+ * @link https://github.com/carpediem/mattermost-webhook/
+ * @version 2.2.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Carpediem\Mattermost\Webhook;
 
-use GuzzleHttp\Psr7;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -29,12 +28,24 @@ use Psr\Http\Message\UriInterface;
  */
 function filter_uri($raw_url, string $name): string
 {
-    $url = Psr7\uri_for($raw_url);
-    if ('' == $url->__toString() || in_array($url->getScheme(), ['http', 'https'], true)) {
-        return (string) $url;
+    if ($raw_url instanceof UriInterface) {
+        $raw_url = (string) $raw_url;
     }
 
-    throw new Exception(sprintf('the URL for `%s` must contains a HTTP or HTTPS scheme %s', $name, $raw_url));
+    if (!is_string($raw_url)) {
+        throw new Exception('the submitted URL must be an instanceof '.UriInterface::class.' or a string');
+    }
+
+    if ('' === $raw_url) {
+        return $raw_url;
+    }
+
+    $parts = @parse_url($raw_url);
+    if (isset($parts['scheme'], $parts['host']) && in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+        return $raw_url;
+    }
+
+    throw new Exception(sprintf('the URL for `%s` must contains a HTTP or HTTPS scheme `%s` given', $name, $raw_url));
 }
 
 /**

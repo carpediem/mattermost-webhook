@@ -3,8 +3,8 @@
  * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 2.1.1
+ * @link https://github.com/carpediem/mattermost-webhook/
+ * @version 2.2.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE

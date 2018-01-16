@@ -2,6 +2,34 @@
 
 All Notable changes to `mattermost-webhook` will be documented in this file
 
+## Next - TBD
+
+### Added
+
+- `MessageInterface`
+- `AttachmentInterface`
+- `ClientInterface`
+- `Client::notify`
+
+### Fixed
+
+- `Client::send` always throws an `Carpediem\Mattermost\Exception`
+- `Attachment::getTitleLink` always returns a string
+- `Attachment::getFields` is made more relaxed to allow iterable return type
+- `Message::getAttachments` is made more relaxed to allow iterable return type
+- A `Attachment` must have at least a non empty `fallback` property
+- A `Message` must have at least a non empty `text` property
+- `Attachment::setFallback` must throws if the fallback value is the empty string
+- `Message::setText` must throws if the text value is the empty string
+
+### Deprecated
+
+- None
+
+### Removed
+
+- None
+
 ## 2.1.1 - 2018-01-16
 
 ### Added

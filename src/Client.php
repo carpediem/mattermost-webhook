@@ -3,8 +3,8 @@
  * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 2.1.1
+ * @link https://github.com/carpediem/mattermost-webhook/
+ * @version 2.2.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Throwable;
 
-final class Client
+final class Client implements ClientInterface
 {
     /**
      * @var GuzzleClient
@@ -27,20 +27,41 @@ final class Client
     private $client;
 
     /**
+     * Guzzle options
+     *
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * New instance
      *
      * @param GuzzleClient $client
+     * @param array        $options
      */
-    public function __construct(GuzzleClient $client)
+    public function __construct(GuzzleClient $client, array $options = [])
     {
         $this->client = $client;
+        $this->options = $options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function notify($url, MessageInterface $message): ResponseInterface
+    {
+        if (!$message instanceof Message) {
+            $message = Message::fromArray($message->toArray());
+        }
+
+        return $this->send($url, $message, $this->options);
     }
 
     /**
      * Send a message to a Mattermost Webhook
      *
      * @param string|UriInterface $url
-     * @param Message             $message
+     * @param MessageInterface    $message
      * @param array               $options additionals Guzzle options
      *
      * @throws Exception
@@ -51,12 +72,12 @@ final class Client
     {
         try {
             unset($options['body']);
-            $options['Content-Type'] = 'application/json';
             $options['json'] = $message;
+            $options['Content-Type'] = 'application/json';
 
             return $this->client->request('POST', $url, $options);
         } catch (Throwable $e) {
-            throw new Exception('An error occurs while sending your message', 1, $e);
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

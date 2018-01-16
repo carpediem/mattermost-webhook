@@ -14,15 +14,14 @@ final class AttachmentTest extends TestCase
 {
     public function testAttachmentState()
     {
-        $attachment = new Attachment();
-        $this->assertEmpty($attachment->jsonSerialize());
+        $attachment = new Attachment('fallback');
+        $this->assertNotEmpty($attachment->jsonSerialize());
         $this->assertNotEmpty($attachment->toArray());
     }
 
     public function testBuilder()
     {
-        $attachment = (new Attachment())
-            ->setFallback('This is the fallback test for the attachment.')
+        $attachment = (new Attachment('This is the fallback test for the attachment.'))
             ->setPretext('This is optional pretext that shows above the attachment.')
             ->setText('This is the text. **Finaly!**')
             ->setAuthorName('Mattermost')
@@ -53,27 +52,33 @@ final class AttachmentTest extends TestCase
         $this->assertCount(4, $attachment->getFields());
     }
 
+    public function testBuilderRequiresAText()
+    {
+        $this->expectException(Exception::class);
+        new Attachment();
+    }
+
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
         $this->expectException(TypeError::class);
-        (new Attachment())->setFallback(date_create());
+        (new Attachment('fallback'))->setFallback(date_create());
     }
 
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
-        (new Attachment())->setThumbUrl('wss://github.com');
+        (new Attachment('fallback'))->setThumbUrl('wss://github.com');
     }
 
     public function testBuilderThrowsExceptionWithSetFields()
     {
         $this->expectException(TypeError::class);
-        (new Attachment())->setFields((object) ['foo', 'bar']);
+        (new Attachment('fallback'))->setFields((object) ['foo', 'bar']);
     }
 
     public function testMutability()
     {
-        $attachment = new Attachment();
+        $attachment = new Attachment('fallback');
         $attachment
             ->setThumbUrl('https://example.com/photo.png')
             ->setTitle('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
@@ -89,17 +94,17 @@ final class AttachmentTest extends TestCase
 
     public function testSetAuthor()
     {
-        $attachment = (new Attachment())
+        $attachment = (new Attachment('fallback'))
             ->setAuthor('', 'https://example.com', 'https://example.com');
         $this->assertEmpty($attachment->getAuthorLink());
         $this->assertEmpty($attachment->getAuthorIcon());
         $this->assertEmpty($attachment->getAuthorName());
 
-        $this->assertEmpty((new Attachment())->setAuthorLink('https://example.com')->getAuthorLink());
-        $this->assertEmpty((new Attachment())->setAuthorIcon('https://example.com')->getAuthorIcon());
+        $this->assertEmpty((new Attachment('fallback'))->setAuthorLink('https://example.com')->getAuthorLink());
+        $this->assertEmpty((new Attachment('fallback'))->setAuthorIcon('https://example.com')->getAuthorIcon());
         $this->assertSame(
             'https://example.com',
-            (new Attachment())
+            (new Attachment('fallback'))
             ->setAuthorName('foobar')
             ->setAuthorIcon('https://example.com')
             ->getAuthorIcon()
@@ -108,7 +113,7 @@ final class AttachmentTest extends TestCase
 
     public function testSetState()
     {
-        $attachment = (new Attachment())
+        $attachment = (new Attachment('fallback'))
             ->setThumbUrl('https://example.com/photo.png')
             ->setTitle('Example attachment', 'http://docs.mattermost.com/developer/message-attachments.html')
         ;
