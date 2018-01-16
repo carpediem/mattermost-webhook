@@ -14,6 +14,7 @@
 namespace Carpediem\Mattermost\Webhook;
 
 use JsonSerializable;
+use Traversable;
 
 interface AttachmentInterface extends JsonSerializable
 {

@@ -46,7 +46,7 @@ interface MessageInterface extends JsonSerializable
     public function getIconUrl(): string;
 
     /**
-     * Returns the collection of AttachementInterface objects
+     * Returns an iterable collection of AttachementInterface objects
      *
      * @return AttachementInterface[]
      */
