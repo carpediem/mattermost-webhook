@@ -1,23 +1,9 @@
 {
     "name": "carpediem/mattermost-webhook",
-    "description": "Mattermost PHP driver to send incoming webhooks",
-    "homepage": "https://github.com/carpediem/mattermost-webhook",
-    "version": "2.0.0",
     "type": "library",
-    "keywords": [
-        "mattermost",
-        "php7",
-        "webhook",
-        "psr-7"
-    ],
-    "require": {
-        "php": ">=7.0",
-        "guzzlehttp/guzzle": "^6.2"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^6.2"
-    },
+    "description": "Sends mattermost webhook notifications using PHP",
+    "keywords": ["mattermost", "php7", "webhook", "psr-7"],
+    "homepage": "https://carpediem.github.io/mattermost-webhook",
     "license": "MIT",
     "authors": [
         {
@@ -31,6 +17,17 @@
             "homepage": "https://carpediem.github.io"
         }
     ],
+    "support": {
+        "issues": "https://github.com/carpediem/mattermost-webhook/issues"
+    },
+    "require": {
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "^6.2"
+    },
     "autoload": {
         "psr-4": {
             "Carpediem\\Mattermost\\Webhook\\": "src/"
