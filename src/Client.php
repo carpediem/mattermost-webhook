@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 2.1.0
+ * @version 2.1.1
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -17,6 +17,7 @@ namespace Carpediem\Mattermost\Webhook;
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
+use Throwable;
 
 final class Client
 {
@@ -42,14 +43,20 @@ final class Client
      * @param Message             $message
      * @param array               $options additionals Guzzle options
      *
+     * @throws Exception
+     *
      * @return ResponseInterface
      */
     public function send($url, Message $message, array $options = []): ResponseInterface
     {
-        unset($options['body']);
-        $options['Content-Type'] = 'application/json';
-        $options['json'] = $message;
+        try {
+            unset($options['body']);
+            $options['Content-Type'] = 'application/json';
+            $options['json'] = $message;
 
-        return $this->client->request('POST', $url, $options);
+            return $this->client->request('POST', $url, $options);
+        } catch (Throwable $e) {
+            throw new Exception('An error occurs while sending your message', 1, $e);
+        }
     }
 }

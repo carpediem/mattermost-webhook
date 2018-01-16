@@ -2,6 +2,25 @@
 
 All Notable changes to `mattermost-webhook` will be documented in this file
 
+## 2.1.1 - 2018-01-16
+
+### Added
+
+- None
+
+### Fixed
+
+- `filter_uri` missing second argument added
+- `Client::send` throws an `Carpediem\Mattermost\Exception`
+
+### Deprecated
+
+- None
+
+### Removed
+
+- None
+
 ## 2.1.0 - 2018-01-15
 
 ### Added

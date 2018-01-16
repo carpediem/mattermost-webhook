@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  * @link https://github.com/carpediem/mattermost-php/
- * @version 2.1.0
+ * @version 2.1.1
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -21,19 +21,20 @@ use Psr\Http\Message\UriInterface;
  * Filter Uri
  *
  * @param string|UriInterface $raw_url
+ * @param string              $name
  *
  * @throws Exception If the value is not a valid URL
  *
  * @return string
  */
-function filter_uri($raw_url): string
+function filter_uri($raw_url, string $name): string
 {
     $url = Psr7\uri_for($raw_url);
     if ('' == $url->__toString() || in_array($url->getScheme(), ['http', 'https'], true)) {
         return (string) $url;
     }
 
-    throw new Exception(sprintf('the URL must contains a HTTP or HTTPS scheme %s', $raw_url));
+    throw new Exception(sprintf('the URL for `%s` must contains a HTTP or HTTPS scheme %s', $name, $raw_url));
 }
 
 /**
