@@ -40,7 +40,7 @@
         }
     },
     "scripts": {
-        "test": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
+        "test": ["@phpunit", "@phpcs"],
         "phpunit": "phpdbg -qrr ./vendor/bin/phpunit --coverage-text",
         "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
     },
