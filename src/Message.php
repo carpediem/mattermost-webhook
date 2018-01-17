@@ -244,7 +244,7 @@ final class Message implements MessageInterface
      *
      * @return self
      */
-    public function addAttachment(Attachment $attachment)
+    public function addAttachment(AttachmentInterface $attachment)
     {
         $this->attachments[] = $attachment;
 
