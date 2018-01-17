@@ -2,7 +2,7 @@
 
 All Notable changes to `mattermost-webhook` will be documented in this file
 
-## Next - TBD
+## 2.2.0 - 2018-01-17
 
 ### Added
 
