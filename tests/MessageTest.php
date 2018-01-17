@@ -40,7 +40,7 @@ final class MessageTest extends TestCase
     public function testBuilderRequiresAText()
     {
         $this->expectException(Exception::class);
-        new Message();
+        new Message('');
     }
 
     public function testBuilderThrowsExceptionWithSetAttachments()

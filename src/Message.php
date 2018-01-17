@@ -19,37 +19,27 @@ use Traversable;
 final class Message implements MessageInterface
 {
     /**
-     * The text of the message.
-     *
      * @var string
      */
     private $text;
 
     /**
-     * The printed username of the message.
-     *
      * @var string
      */
     private $username = '';
 
     /**
-     * The channel of the message.
-     *
      * @var string
      */
     private $channel = '';
 
     /**
-     * The icon of the message.
-     *
-     * @var UriInterface
+     * @var string
      */
     private $icon_url = '';
 
     /**
-     * The attachments of the message.
-     *
-     * @var Attachment[]
+     * @var AttachmentInterface[]
      */
     private $attachments = [];
 
@@ -62,8 +52,8 @@ final class Message implements MessageInterface
      */
     public static function fromArray(array $arr): self
     {
-        $text = $arr['text'] ?? '';
-        $prop = $arr + (new self($text))->toArray();
+        $arr['text'] = $arr['text'] ?? '';
+        $prop = $arr + (new self($arr['text']))->toArray();
         foreach ($prop['attachments'] as $offset => $attachment) {
             if (!$attachment instanceof Attachment) {
                 $attachment = Attachment::fromArray($attachment);
@@ -92,7 +82,7 @@ final class Message implements MessageInterface
      *
      * @param string $text
      */
-    public function __construct(string $text = '')
+    public function __construct(string $text)
     {
         $this->setText($text);
     }

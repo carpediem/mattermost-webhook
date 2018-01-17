@@ -37,7 +37,7 @@ final class Client implements ClientInterface
      * New instance
      *
      * @param GuzzleClient $client
-     * @param array        $options
+     * @param array        $options additional Guzzle options
      */
     public function __construct(GuzzleClient $client, array $options = [])
     {
@@ -59,6 +59,11 @@ final class Client implements ClientInterface
 
     /**
      * Send a message to a Mattermost Webhook
+     *
+     * DEPRECATION WARNING! This method will be removed in the next major point release
+     *
+     * @deprecated deprecated since version 1.1.0
+     * @see Client::notify
      *
      * @param string|UriInterface $url
      * @param MessageInterface    $message

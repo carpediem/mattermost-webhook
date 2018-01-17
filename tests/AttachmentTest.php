@@ -54,7 +54,7 @@ final class AttachmentTest extends TestCase
     public function testBuilderRequiresAText()
     {
         $this->expectException(Exception::class);
-        new Attachment();
+        new Attachment('');
     }
 
     public function testBuilderThrowsExceptionWithInvalidUri()

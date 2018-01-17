@@ -114,7 +114,7 @@ final class Attachment implements AttachmentInterface
      *
      * @param string $fallback
      */
-    public function __construct(string $fallback = '')
+    public function __construct(string $fallback)
     {
         $this->setFallback($fallback);
     }
