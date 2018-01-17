@@ -3,8 +3,8 @@
  * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 1.1.0
+ * @link https://github.com/carpediem/mattermost-webhook/
+ * @version 1.2.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -13,45 +13,34 @@
 
 namespace Carpediem\Mattermost\Webhook;
 
-use JsonSerializable;
 use Traversable;
 
-final class Message implements JsonSerializable
+final class Message implements MessageInterface
 {
     /**
-     * The text of the message.
-     *
      * @var string
      */
-    private $text = '';
+    private $text;
 
     /**
-     * The printed username of the message.
-     *
      * @var string
      */
     private $username = '';
 
     /**
-     * The channel of the message.
-     *
      * @var string
      */
     private $channel = '';
 
     /**
-     * The icon of the message.
-     *
-     * @var UriInterface
+     * @var string
      */
     private $icon_url = '';
 
     /**
-     * The attachments of the message.
-     *
-     * @var Attachment[]
+     * @var AttachmentInterface[]
      */
-    public $attachments = [];
+    private $attachments = [];
 
     /**
      * Returns a new instance from an array
@@ -62,8 +51,11 @@ final class Message implements JsonSerializable
      */
     public static function fromArray(array $arr)
     {
-        $prop = $arr + (new self())->toArray();
+        if (!isset($arr['text'])) {
+            $arr['text'] = '';
+        }
 
+        $prop = $arr + (new self($arr['text']))->toArray();
         foreach ($prop['attachments'] as $offset => $attachment) {
             if (!$attachment instanceof Attachment) {
                 $attachment = Attachment::fromArray($attachment);
@@ -79,13 +71,64 @@ final class Message implements JsonSerializable
      */
     public static function __set_state(array $prop)
     {
-        return (new self())
-            ->setText($prop['text'])
+        return (new self($prop['text']))
             ->setUsername($prop['username'])
             ->setChannel($prop['channel'])
             ->setIconUrl($prop['icon_url'])
             ->setAttachments($prop['attachments'])
         ;
+    }
+
+    /**
+     * New instance
+     *
+     * @param string $text
+     */
+    public function __construct($text)
+    {
+        $this->setText($text);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIconUrl()
+    {
+        return $this->icon_url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttachments()
+    {
+        foreach ($this->attachments as $attachment) {
+            yield $attachment;
+        }
     }
 
     /**
@@ -99,9 +142,7 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * Returns the array representation of the object
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function toArray()
     {
@@ -115,28 +156,27 @@ final class Message implements JsonSerializable
     }
 
     /**
+     * Returns an instance with the specified message text.
+     *
      * @param string $text
      *
      * @return self
      */
     public function setText($text)
     {
-        $this->text = filter_string($text, 'text');
+        $text = filter_string($text, 'text');
+        if ('' === $text) {
+            throw new Exception('The text can not be empty');
+        }
+
+        $this->text = $text;
 
         return $this;
     }
 
     /**
-     * Returns the text
+     * Returns an instance with the specified message username.
      *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
      * @param string $username
      *
      * @return self
@@ -149,16 +189,8 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * Returns the username
+     * Returns an instance with the specified message channel.
      *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
      * @param string $channel
      *
      * @return self
@@ -171,16 +203,8 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * Returns the channel
+     * Returns an instance with the specified message icon URL.
      *
-     * @return string
-     */
-    public function getChannel()
-    {
-        return $this->channel;
-    }
-
-    /**
      * @param string|UriInterface $icon_url
      *
      * @return self
@@ -193,31 +217,7 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * Returns the icon url
-     *
-     * @return string
-     */
-    public function getIconUrl()
-    {
-        return $this->icon_url;
-    }
-
-    /**
-     * Add an attachment for the message.
-     *
-     * @param Attachment|callable $attachment
-     *
-     * @return self
-     */
-    public function addAttachment(Attachment $attachment)
-    {
-        $this->attachments[] = $attachment;
-
-        return $this;
-    }
-
-    /**
-     * Override all attachements with a iterable structure
+     * Override all attachements object with a iterable structure
      *
      * @param array|Traversable $attachments
      *
@@ -238,14 +238,16 @@ final class Message implements JsonSerializable
     }
 
     /**
-     * Returns the Attachement objects
+     * Returns an instance with the added attachment object.
      *
-     * @return Attachment[]
+     * @param AttachmentInterface $attachment
+     *
+     * @return self
      */
-    public function getAttachments()
+    public function addAttachment(Attachment $attachment)
     {
-        foreach ($this->attachments as $attachment) {
-            yield $attachment;
-        }
+        $this->attachments[] = $attachment;
+
+        return $this;
     }
 }

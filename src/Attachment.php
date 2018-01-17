@@ -3,8 +3,8 @@
  * This file is part of the carpediem mattermost webhook library
  *
  * @license http://opensource.org/licenses/MIT
- * @link https://github.com/carpediem/mattermost-php/
- * @version 1.1.0
+ * @link https://github.com/carpediem/mattermost-webhook/
+ * @version 1.2.0
  * @package carpediem.mattermost-webhook
  *
  * For the full copyright and license information, please view the LICENSE
@@ -13,117 +13,68 @@
 
 namespace Carpediem\Mattermost\Webhook;
 
-use Iterator;
-use JsonSerializable;
 use Traversable;
 
-final class Attachment implements JsonSerializable
+final class Attachment implements AttachmentInterface
 {
     /**
-     * A required plain-text summary of the post.
-     *
-     * This is used in notifications, and in clients that don’t support formatted text (eg IRC).
-     *
      * @var string
      */
-    private $fallback = '';
+    private $fallback;
 
     /**
-     * A hex color code that will be used as the left border color for the attachment.
-     *
-     * If not specified, it will default to match the left hand sidebar header background color.
-     *
      * @var string
      */
     private $color = '';
 
     /**
-     * An optional line of text that will be shown above the attachment.
-     *
      * @var string
      */
     private $pretext = '';
 
     /**
-     * The text to be included in the attachment.
-     *
-     * It can be formatted using markdown.
-     * If it includes more than 700 characters or more than 5 line breaks,
-     * the message will be collapsed and a “Show More” link will be added
-     * to expand the message.
-     *
      * @var string
      */
     private $text = '';
 
     /**
-     * An optional name used to identify the author.
-     *
-     * It will be included in a small section at the top of the attachment.
-     *
      * @var string
      */
     private $author_name = '';
 
     /**
-     * An optional URL used to hyperlink the author_name.
-     *
-     * If no author_name is specified, this field does nothing.
      *
      * @var string
      */
     private $author_link = '';
 
     /**
-     * An optional URL used to display a 16x16 pixel icon beside the author_name.
-     *
      * @var string
      */
     private $author_icon = '';
 
     /**
-     * An optional title displayed below the author information in the attachment.
-     *
      * @var string
      */
     private $title = '';
 
     /**
-     * An optional URL used to hyperlink the title.
-     *
-     * If no title is specified, this field does nothing.
-     *
-     * @var string|null
+     * @var string
      */
-    private $title_link;
+    private $title_link = '';
 
     /**
-     * Fields can be included as an optional array within attachments,
-     * and are used to display information in a table format inside the attachment.
-     *
      * @var array
      */
     private $fields = [];
 
     /**
-     * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
-     * that will be displayed inside a message attachment.
-     *
-     * Large images will be resized to a maximum width of 400px
-     * or a maximum height of 300px, while still maintaining the original aspect ratio.
-     *
-     * @var string|UriInterface
+     * @var string
      */
     private $image_url = '';
 
     /**
-     * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
-     * that will be displayed as a 75x75 pixel thumbnail on the right side of an attachment.
-     *
-     * We recommend using an image that is already 75x75 pixels,
-     * but larger images will be scaled down with the aspect ratio maintained.
-     *
-     * @var string|UriInterface
+     * @var string
      */
     private $thumb_url = '';
 
@@ -136,7 +87,11 @@ final class Attachment implements JsonSerializable
      */
     public static function fromArray(array $arr)
     {
-        $prop = $arr + (new self())->toArray();
+        if (!isset($arr['fallback'])) {
+            $arr['fallback'] = '';
+        }
+
+        $prop = $arr + (new self($arr['fallback']))->toArray();
 
         return self::__set_state($prop);
     }
@@ -146,8 +101,7 @@ final class Attachment implements JsonSerializable
      */
     public static function __set_state(array $prop)
     {
-        return (new self())
-            ->setFallback($prop['fallback'])
+        return (new self($prop['fallback']))
             ->setColor($prop['color'])
             ->setPretext($prop['pretext'])
             ->setText($prop['text'])
@@ -160,6 +114,122 @@ final class Attachment implements JsonSerializable
     }
 
     /**
+     * New instance
+     *
+     * @param string $fallback
+     */
+    public function __construct($fallback)
+    {
+        $this->setFallback($fallback);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFallback()
+    {
+        return $this->fallback;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPretext()
+    {
+        return $this->pretext;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthorName()
+    {
+        return $this->author_name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthorLink()
+    {
+        return $this->author_link;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthorIcon()
+    {
+        return $this->author_icon;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitleLink()
+    {
+        return $this->title_link;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFields()
+    {
+        foreach ($this->fields as $field) {
+            yield $field;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImageUrl()
+    {
+        return $this->image_url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getThumbUrl()
+    {
+        return $this->thumb_url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return  get_object_vars($this);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function jsonSerialize()
@@ -168,36 +238,35 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * Returns the array representation of the Attachment
+     * Returns an instance with the specified fallback.
      *
-     * @return array
+     * A required plain-text summary of the post.
+     *
+     * This is used in notifications, and in clients that don’t support formatted text (eg IRC).
+     *
+     * @param string $fallback
+     *
+     * @return self
      */
-    public function toArray()
-    {
-        return  get_object_vars($this);
-    }
-
-    /**
-      * @param string $fallback
-      *
-      * @return self
-      */
     public function setFallback($fallback)
     {
-        $this->fallback = filter_string($fallback, 'fallback');
+        $fallback = filter_string($fallback, 'fallback');
+        if ('' === $fallback) {
+            throw new Exception('The fallback text can not be empty');
+        }
+
+        $this->fallback = $fallback;
 
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getFallback()
-    {
-        return $this->fallback;
-    }
-
-    /**
+     * Returns an instance with the specified color.
+     *
+     * A hex color code that will be used as the left border color for the attachment.
+     *
+     * If not specified, it will default to match the left hand sidebar header background color.
+     *
      * @param string $color
      *
      * @return self
@@ -210,14 +279,10 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
+     * Returns an instance with the specified pretext.
+     *
+     * An optional line of text that will be shown above the attachment.
+     *
      * @param string $pretext
      *
      * @return self
@@ -230,14 +295,15 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getPretext()
-    {
-        return $this->pretext;
-    }
-
-    /**
+     * Returns an instance with the specified text.
+     *
+     * The text to be included in the attachment.
+     *
+     * It can be formatted using markdown.
+     * If it includes more than 700 characters or more than 5 line breaks,
+     * the message will be collapsed and a “Show More” link will be added
+     * to expand the message.
+     *
      * @param string $text
      *
      * @return self
@@ -250,19 +316,20 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Set attachment author.
+     * Returns an instance with the specified author.
      *
-     * @param string              $author_name
-     * @param string|UriInterface $author_link
-     * @param string|UriInterface $author_icon
+     * It will be included in a small section at the top of the attachment.
+     *
+     *
+     * @param string              $author_name An optional name used to identify the author.
+     * @param string|UriInterface $author_link An optional URL used to hyperlink the author_name.
+     *                                         If no author_name is specified, this field does nothing.
+     *
+     * @param string|UriInterface $author_icon An optional URL used to display a 16x16 pixel icon
+     *                                         beside the author_name.
+     *                                         If no author_name is specified, this field does nothing.
+     *
+     * @return self
      */
     public function setAuthor($author_name, $author_link = '', $author_icon = '')
     {
@@ -278,36 +345,6 @@ final class Attachment implements JsonSerializable
         $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
-    }
-
-    /**
-     * Returns the author name.
-     *
-     * @return string
-     */
-    public function getAuthorName()
-    {
-        return $this->author_name;
-    }
-
-    /**
-     * Returns the author link URI.
-     *
-     * @return string
-     */
-    public function getAuthorLink()
-    {
-        return $this->author_link;
-    }
-
-    /**
-     * Returns the author icon URI.
-     *
-     * @return string
-     */
-    public function getAuthorIcon()
-    {
-        return $this->author_icon;
     }
 
     /**
@@ -362,16 +399,20 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @param string              $title
-     * @param string|UriInterface $title_link
+     * Returns an instance with the specified title.
+     *
+     * @param string              $title      An optional title displayed below the author information
+     *                                        in the attachment.
+     * @param string|UriInterface $title_link An optional URL used to hyperlink the title.
+     *                                        If no title is specified, this field does nothing.
      *
      * @return self
      */
-    public function setTitle($title, $title_link = null)
+    public function setTitle($title, $title_link = '')
     {
         $this->title = filter_string($title, 'title');
-        if ('' === $this->title || null === $title_link) {
-            $this->title_link = null;
+        if ('' === $this->title || '' === $title_link) {
+            $this->title_link = '';
 
             return $this;
         }
@@ -382,23 +423,10 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTitleLink()
-    {
-        return $this->title_link;
-    }
-
-    /**
-     * Override all fields with an array
+     * Returns an instance with the specified fields.
+     *
+     * Fields can be included as an optional array within attachments,
+     * and are used to display information in a table format inside the attachment.
      *
      * @param array|Traversable $fields
      *
@@ -419,7 +447,9 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * Add a field to the attachment
+     * Returns an instance with the added field to the attachment
+     *
+     * Adds a single field to the object fields collection.
      *
      * @param string $title A title shown in the table above the value.
      * @param string $value The text value of the field. It can be formatted using markdown.
@@ -440,16 +470,14 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return Iterator
-     */
-    public function getFields()
-    {
-        foreach ($this->fields as $field) {
-            yield $field;
-        }
-    }
-
-    /**
+     * Returns an instance with the specified image URL.
+     *
+     * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
+     * that will be displayed inside a message attachment.
+     *
+     * Large images will be resized to a maximum width of 400px
+     * or a maximum height of 300px, while still maintaining the original aspect ratio.
+     *
      * @param string|UriInterface $image_url
      *
      * @return self
@@ -462,14 +490,14 @@ final class Attachment implements JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getImageUrl()
-    {
-        return $this->image_url;
-    }
-
-    /**
+     * Returns an instance with the specified thumb URL.
+     *
+     * An optional URL to an image file (GIF, JPEG, PNG, or BMP)
+     * that will be displayed as a 75x75 pixel thumbnail on the right side of an attachment.
+     *
+     * We recommend using an image that is already 75x75 pixels,
+     * but larger images will be scaled down with the aspect ratio maintained.
+     *
      * @param string|UriInterface $thumb_url
      *
      * @return self
@@ -479,13 +507,5 @@ final class Attachment implements JsonSerializable
         $this->thumb_url = filter_uri($thumb_url, 'thumb_url');
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getThumbUrl()
-    {
-        return $this->thumb_url;
     }
 }

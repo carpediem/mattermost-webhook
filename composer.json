@@ -1,23 +1,9 @@
 {
     "name": "carpediem/mattermost-webhook",
-    "description": "Mattermost PHP driver to send incoming webhooks",
-    "homepage": "https://github.com/carpediem/mattermost-webhook",
-    "version": "1.0.0",
     "type": "library",
-    "keywords": [
-        "mattermost",
-        "php5",
-        "webhook",
-        "psr-7"
-    ],
-    "require": {
-        "php": ">=5.6",
-        "guzzlehttp/guzzle": "^6.2"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.7.0"
-    },
+    "description": "Sends mattermost webhook notifications using PHP",
+    "keywords": ["mattermost", "php7", "webhook", "psr-7"],
+    "homepage": "https://carpediem.github.io/mattermost-webhook",
     "license": "MIT",
     "authors": [
         {
@@ -31,6 +17,18 @@
             "homepage": "https://carpediem.github.io"
         }
     ],
+    "support": {
+        "issues": "https://github.com/carpediem/mattermost-webhook/issues"
+    },
+    "require": {
+        "php": ">=5.6",
+        "guzzlehttp/guzzle": "^6.2",
+        "psr/http-message-implementation": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "^5.6"
+    },
     "autoload": {
         "psr-4": {
             "Carpediem\\Mattermost\\Webhook\\": "src/"
@@ -43,7 +41,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
+        "test": ["@phpunit", "@phpcs"],
         "phpunit": "phpunit --coverage-text",
         "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
     },

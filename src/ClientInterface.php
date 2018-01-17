@@ -13,6 +13,20 @@
 
 namespace Carpediem\Mattermost\Webhook;
 
-class Exception extends \Exception
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
+
+interface ClientInterface
 {
+    /**
+     * Send a message to a Mattermost Webhook
+     *
+     * @param string|UriInterface $url
+     * @param MessageInterface    $message
+     *
+     * @throws Exception
+     *
+     * @return ResponseInterface
+     */
+    public function notify($url, MessageInterface $message);
 }

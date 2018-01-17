@@ -14,18 +14,18 @@ final class MessageTest extends TestCase
 {
     public function testAttachmentState()
     {
-        $message = new Message();
-        $this->assertEmpty($message->jsonSerialize());
+        $message = new Message('default text');
+        $this->assertNotEmpty($message->jsonSerialize());
         $this->assertNotEmpty($message->toArray());
     }
     public function testBuilder()
     {
-        $message = (new Message())
+        $message = (new Message('default text'))
             ->setText('This is a *test*.')
             ->setChannel('tests')
             ->setUsername('A Tester')
             ->setIconUrl('https://upload.wikimedia.org/wikipedia/fr/f/f6/Phpunit-logo.gif')
-            ->addAttachment(new Attachment())
+            ->addAttachment(new Attachment('fallback text'))
         ;
         $this->assertNotEmpty($message->toArray());
         $this->assertNotEmpty($message->jsonSerialize());
@@ -39,26 +39,31 @@ final class MessageTest extends TestCase
     public function testBuilderThrowsExceptionWithNonStringableValue()
     {
         $this->expectException(Exception::class);
-        (new Message())->setText(date_create());
+        new Message(date_create());
+    }
+
+    public function testBuilderThrowsExceptionWithEmptyString()
+    {
+        $this->expectException(Exception::class);
+        Message::fromArray([]);
     }
 
     public function testBuilderThrowsExceptionWithInvalidUri()
     {
         $this->expectException(Exception::class);
-        (new Message())->setIconUrl('//github.com');
+        (new Message('default text'))->setIconUrl('//github.com');
     }
 
     public function testBuilderThrowsExceptionWithSetAttachments()
     {
         $this->expectException(Exception::class);
-        (new Message())->setAttachments((object) ['foo', 'bar']);
+        (new Message('default text'))->setAttachments((object) ['foo', 'bar']);
     }
 
     public function testMutability()
     {
-        $message = new Message();
-        $message->setText('Coucou it\'s me');
-        $message->setAttachments([new Attachment(), new Attachment()]);
+        $message = new Message('Coucou it\'s me');
+        $message->setAttachments([new Attachment('fallback text'), new Attachment('fallback text')]);
         $this->assertSame('Coucou it\'s me', $message->getText());
         $message->setText('Overwritten info');
         $this->assertSame('Overwritten info', $message->getText());
@@ -66,9 +71,8 @@ final class MessageTest extends TestCase
 
     public function testSetState()
     {
-        $message = new Message();
-        $message->setText('Coucou it\'s me');
-        $message->setAttachments([new Attachment(), new Attachment()]);
+        $message = new Message('Coucou it\'s me');
+        $message->setAttachments([new Attachment('fallback text'), new Attachment('fallback text')]);
 
         $generatedMessage = eval('return '.var_export($message, true).';');
         $this->assertEquals($message, $generatedMessage);
@@ -76,9 +80,8 @@ final class MessageTest extends TestCase
 
     public function testCreateFromArray()
     {
-        $message = new Message();
-        $message->setText('Coucou it\'s me');
-        $message->setAttachments([new Attachment(), new Attachment()]);
+        $message = new Message('Coucou it\'s me');
+        $message->setAttachments([new Attachment('fallback text'), new Attachment('fallback text')]);
         $this->assertEquals($message, Message::fromArray($message->toArray()));
     }
 }
