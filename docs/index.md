@@ -39,8 +39,8 @@ use Carpediem\Mattermost\Webhook\Client;
 use Carpediem\Mattermost\Webhook\Message;
 
 $mattermost = new Client(new GuzzleClient());
-$message = (new Message())->setText('This is a *test*.');
-$response = $mattermost->send('https://your_mattermost_webhook_url', $message);
+$message = new Message('This is a *test*.');
+$response = $mattermost->notify('https://your_mattermost_webhook_url', $message);
 
 //$response is a Psr7\Http\Message\ResponseInterface.
 ```
@@ -48,7 +48,9 @@ $response = $mattermost->send('https://your_mattermost_webhook_url', $message);
 Credits
 -------
 
-This package is a fork from [ThibaudDauce/mattermost-php ](https://github.com/ThibaudDauce/mattermost-php) improved by [Carpediem](//carpediem.github.io)
+This package is a fork from [ThibaudDauce/mattermost-php ](https://github.com/ThibaudDauce/mattermost-php)
+improved by
+[Carpediem](//carpediem.github.io)
 
 License
 -------
