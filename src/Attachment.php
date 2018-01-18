@@ -242,6 +242,8 @@ final class Attachment implements AttachmentInterface
      *
      * @param string $fallback
      *
+     * @throws Exception if the fallback is an empty string
+     *
      * @return self
      */
     public function setFallback(string $fallback): self
@@ -330,15 +332,12 @@ final class Attachment implements AttachmentInterface
     public function setAuthor(string $author_name, $author_link = '', $author_icon = ''): self
     {
         $this->author_name = trim($author_name);
+        $this->author_link = filter_uri($author_link, 'author_link');
+        $this->author_icon = filter_uri($author_icon, 'author_icon');
         if ('' === $this->author_name) {
             $this->author_link = '';
             $this->author_icon = '';
-
-            return $this;
         }
-
-        $this->author_link = filter_uri($author_link, 'author_link');
-        $this->author_icon = filter_uri($author_icon, 'author_icon');
 
         return $this;
     }
@@ -407,13 +406,10 @@ final class Attachment implements AttachmentInterface
     public function setTitle(string $title, $title_link = ''): self
     {
         $this->title = trim($title);
-        if ('' === $this->title || '' === $title_link) {
-            $this->title_link = '';
-
-            return $this;
-        }
-
         $this->title_link = filter_uri($title_link, 'title_link');
+        if ('' === $this->title) {
+            $this->title_link = '';
+        }
 
         return $this;
     }

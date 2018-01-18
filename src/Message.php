@@ -157,6 +157,8 @@ final class Message implements MessageInterface
      *
      * @param string $text
      *
+     * @throws Exception if the text is an empty string
+     *
      * @return self
      */
     public function setText(string $text): self

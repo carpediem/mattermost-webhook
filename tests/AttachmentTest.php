@@ -104,6 +104,20 @@ final class AttachmentTest extends TestCase
         );
     }
 
+    public function testSetAuthorThrowsWithInvalidUri()
+    {
+        $this->expectException(Exception::class);
+        $attachment = (new Attachment('fallback'))
+            ->setAuthor('', (object) 'https://example.com');
+    }
+
+    public function testSetTitleThrowsWithInvalidUri()
+    {
+        $this->expectException(Exception::class);
+        $attachment = (new Attachment('fallback'))
+            ->setTitle('', (object) 'https://example.com');
+    }
+
     public function testSetState()
     {
         $attachment = (new Attachment('fallback'))
