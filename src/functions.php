@@ -31,7 +31,7 @@ function filter_string($var, $name = '')
         return trim((string) $var);
     }
 
-    throw new Exception(sprintf('Expected %s to a a string %s received', $name, gettype($var)));
+    throw new Exception(sprintf('Expected %s to be a string `%s` received', $name, gettype($var)));
 }
 
 /**
