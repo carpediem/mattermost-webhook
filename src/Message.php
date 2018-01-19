@@ -51,17 +51,13 @@ final class Message implements MessageInterface
      */
     public static function fromArray(array $arr)
     {
-        if (!isset($arr['text'])) {
-            $arr['text'] = '';
-        }
-
-        $prop = $arr + (new self($arr['text']))->toArray();
-        foreach ($prop['attachments'] as $offset => $attachment) {
-            if (!$attachment instanceof Attachment) {
+        $prop = $arr + (new self(isset($arr['text']) ? $arr['text'] : ''))->toArray();
+        foreach ($prop['attachments'] as &$attachment) {
+            if (!$attachment instanceof AttachmentInterface) {
                 $attachment = Attachment::fromArray($attachment);
             }
-            $prop['attachments'][$offset] = $attachment;
         }
+        unset($attachment);
 
         return self::__set_state($prop);
     }
