@@ -86,8 +86,7 @@ final class Attachment implements AttachmentInterface
      */
     public static function fromArray(array $arr): self
     {
-        $text = $arr['fallback'] ?? '';
-        $prop = $arr + (new self($text))->toArray();
+        $prop = $arr + (new self($arr['fallback'] ?? ''))->toArray();
 
         return self::__set_state($prop);
     }
